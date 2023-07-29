@@ -16,11 +16,17 @@ class Point extends PositionComponent {
   final int order;
   final List<Piece> _pieces = [];
 
+  bool get canAcceptPiece => _pieces.length < BackgammonGame.maxPiecesPerPoint;
+
+  bool canSendPieceToBar(Piece newPiece) => _pieces.length == 1 && _pieces.first.owner != newPiece.owner;
+
   void acquirePiece(Piece piece) {
+    assert(!canSendPieceToBar(piece), 'This point shouldn\'t acquire a different owners piece right now');
     assert(_pieces.length <= BackgammonGame.maxPiecesPerPoint);
 
     piece.priority = _pieces.length;
     piece.point = this;
+    piece.bar = null;
 
     _pieces.add(piece);
     _positionPieces();
@@ -28,6 +34,11 @@ class Point extends PositionComponent {
 
   void removePiece(Piece piece) {
     _pieces.remove(piece);
+    _positionPieces();
+  }
+
+  void returnPiece(Piece piece) {
+    piece.priority = _pieces.length;
     _positionPieces();
   }
 
@@ -44,7 +55,7 @@ class Point extends PositionComponent {
     final isInTopHalf = _currentQuadrantType.isTop;
     final firstPiece = _pieces[0];
     final middlePosition = Vector2(
-      position.x + BackgammonGame.pointSize.x / 2 - firstPiece.size.x / 2,
+      position.x + size.x / 2 - firstPiece.size.x / 2,
       isInTopHalf ? position.y : position.y + size.y - firstPiece.size.y,
     );
 
@@ -54,7 +65,5 @@ class Point extends PositionComponent {
         ..setFrom(_pieces[i - 1].position)
         ..add(Vector2(0, (isInTopHalf ? 1 : -1) * _pieces[i].size.y));
     }
-
-    // height = KlondikeGame.cardHeight * 1.5 + cards.last.y - cards.first.y;
   }
 }

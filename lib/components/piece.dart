@@ -1,4 +1,5 @@
 import 'package:backgammon/backgammon_game.dart';
+import 'package:backgammon/components/bar.dart';
 import 'package:backgammon/components/point.dart';
 import 'package:backgammon/utils/position_component_utils.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
@@ -7,8 +8,12 @@ import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
 
 enum PieceOwner {
-  player,
-  opponent;
+  player(1),
+  opponent(-1);
+
+  const PieceOwner(this.barDirection);
+
+  final int barDirection;
 
   bool get isPlayer => this == player;
 }
@@ -30,6 +35,7 @@ class Piece extends PositionComponent with DragCallbacks {
   final Sprite _sprite;
 
   Point? point;
+  Bar? bar;
 
   static final Map<PieceColor, Sprite> _sprites = {
     PieceColor.silver: backgammonSprite(SpriteAssetType.piece, x: 1, y: 18, width: 14, height: 16),
@@ -60,16 +66,27 @@ class Piece extends PositionComponent with DragCallbacks {
       return;
     }
 
-    final point = this.point;
-    if (point == null) {
-      return;
-    }
-
+    var isMoving = false;
     final nearbyPoints = parent!.componentsAtPoint(position + size / 2).whereType<Point>().toList();
     if (nearbyPoints.isNotEmpty) {
-      point.removePiece(this);
       final closestPoint = nearbyPoints.first;
-      closestPoint.acquirePiece(this);
+      if (closestPoint.canSendPieceToBar(this)) {
+        final bar = parent?.children.whereType<Bar>().firstOrNull;
+        if (bar != null) {
+          point?.removePiece(this);
+          bar.acquirePiece(this);
+          isMoving = true;
+        }
+      } else if (closestPoint.canAcceptPiece) {
+        bar?.removePiece(this);
+        point?.removePiece(this);
+        closestPoint.acquirePiece(this);
+        isMoving = true;
+      }
+    }
+
+    if (!isMoving) {
+      point?.returnPiece(this);
     }
 
     super.onDragEnd(event);
