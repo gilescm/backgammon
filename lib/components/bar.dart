@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:backgammon/backgammon_game.dart';
 import 'package:backgammon/components/piece.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
 import 'package:flame/components.dart';
@@ -7,7 +8,11 @@ import 'package:flame/components.dart';
 /// This is purgatory/jail for the pieces. Captured pieces come
 /// here and wait for a lucky roll to be released
 class Bar extends PositionComponent {
-  Bar({super.position, super.size});
+  Bar()
+      : super(
+          position: Vector2(BackgammonGame.quadrantSize.x, BackgammonGame.pointSize.y),
+          size: BackgammonGame.barSize,
+        );
 
   final List<Piece> _pieces = [];
 

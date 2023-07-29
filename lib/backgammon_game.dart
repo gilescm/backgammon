@@ -1,6 +1,7 @@
 import 'package:backgammon/components/bar.dart';
 import 'package:backgammon/components/piece.dart';
 import 'package:backgammon/components/quadrant.dart';
+import 'package:backgammon/components/win_pile.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
@@ -18,7 +19,7 @@ class BackgammonGame extends FlameGame {
   static final Vector2 pointSize = Vector2(_pointWidth, _pointHeight);
   static final Vector2 barSize = Vector2(pieceSize.x * 1.25, pointSize.y * 2);
   static final Vector2 quadrantSize = Vector2(_pointWidth * 6, _pointHeight);
-  static final Vector2 boardSize = Vector2(_pointWidth * 12 + barSize.x, _pointHeight * 2);
+  static final Vector2 boardSize = Vector2(_pointWidth * 12 + barSize.x * 2, _pointHeight * 2);
 
   static const int maxPiecesPerPoint = 5;
 
@@ -30,11 +31,10 @@ class BackgammonGame extends FlameGame {
 
     final world = World();
 
-    final bar = Bar(
-      position: Vector2(quadrantSize.x, pointSize.y),
-      size: barSize,
-    );
+    final bar = Bar();
+    final winPile = WinPile();
     world.add(bar);
+    world.add(winPile);
 
     final quadrants = [
       Quadrant(type: QuadrantType.topLeft, position: Vector2(0, quadrantSize.y)),
