@@ -1,24 +1,12 @@
 import 'package:backgammon/backgammon_game.dart';
 import 'package:backgammon/components/bar.dart';
+import 'package:backgammon/components/component_enums.dart';
 import 'package:backgammon/components/point.dart';
 import 'package:backgammon/utils/position_component_utils.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
-
-enum PieceOwner {
-  player(1),
-  opponent(-1);
-
-  const PieceOwner(this.barDirection);
-
-  final int barDirection;
-
-  bool get isPlayer => this == player;
-}
-
-enum PieceColor { silver, white, red, green, yellow, emerald, purple, blue, orange }
 
 class Piece extends PositionComponent with DragCallbacks {
   Piece({

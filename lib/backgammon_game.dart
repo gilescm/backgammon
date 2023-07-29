@@ -1,4 +1,5 @@
 import 'package:backgammon/components/bar.dart';
+import 'package:backgammon/components/component_enums.dart';
 import 'package:backgammon/components/piece.dart';
 import 'package:backgammon/components/quadrant.dart';
 import 'package:backgammon/components/win_pile.dart';

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:backgammon/backgammon_game.dart';
+import 'package:backgammon/components/component_enums.dart';
 import 'package:backgammon/components/piece.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
 import 'package:flame/components.dart';
