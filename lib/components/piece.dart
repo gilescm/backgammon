@@ -77,7 +77,7 @@ class Piece extends PositionComponent with DragCallbacks {
           bar.acquirePiece(this);
           isMoving = true;
         }
-      } else if (closestPoint.canAcceptPiece) {
+      } else if (closestPoint.canAcceptPiece(this)) {
         bar?.removePiece(this);
         point?.removePiece(this);
         closestPoint.acquirePiece(this);

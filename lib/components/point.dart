@@ -16,13 +16,15 @@ class Point extends PositionComponent {
   final int order;
   final List<Piece> _pieces = [];
 
-  bool get canAcceptPiece => _pieces.length < BackgammonGame.maxPiecesPerPoint;
+  bool canAcceptPiece(Piece piece) {
+    return _pieces.where((p) => p.owner != piece.owner).isEmpty && _pieces.length < BackgammonGame.maxPiecesPerPoint;
+  }
 
-  bool canSendPieceToBar(Piece newPiece) => _pieces.length == 1 && _pieces.first.owner != newPiece.owner;
+  bool canSendPieceToBar(Piece piece) => _pieces.length == 1 && _pieces.first.owner != piece.owner;
 
   void acquirePiece(Piece piece) {
     assert(!canSendPieceToBar(piece), 'This point shouldn\'t acquire a different owners piece right now');
-    assert(_pieces.length <= BackgammonGame.maxPiecesPerPoint);
+    assert(canAcceptPiece(piece));
 
     piece.priority = _pieces.length;
     piece.point = this;
