@@ -38,6 +38,11 @@ class Bar extends PositionComponent {
     _positionPieces();
   }
 
+  void returnPiece(Piece piece) {
+    piece.priority = _pieces.length;
+    _positionPieces();
+  }
+
   @override
   void render(Canvas canvas) {
     _sprite.render(

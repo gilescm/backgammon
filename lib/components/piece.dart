@@ -97,6 +97,7 @@ class Piece extends PositionComponent with DragCallbacks {
 
     if (!isMoving) {
       point?.returnPiece(this);
+      bar?.returnPiece(this);
     }
 
     super.onDragEnd(event);
