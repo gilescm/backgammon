@@ -25,6 +25,8 @@ class BackgammonGame extends FlameGame {
 
   @override
   Future<void> onLoad() async {
+    await Flame.device.setLandscape();
+
     for (final spriteAsset in SpriteAssetType.values) {
       await Flame.images.load(spriteAsset.path);
     }
