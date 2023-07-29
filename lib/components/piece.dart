@@ -70,11 +70,11 @@ class Piece extends PositionComponent with DragCallbacks {
     final nearbyPoints = parent!.componentsAtPoint(position + size / 2).whereType<Point>().toList();
     if (nearbyPoints.isNotEmpty) {
       final closestPoint = nearbyPoints.first;
-      if (closestPoint.canSendPieceToBar(this)) {
+      if (closestPoint.canSendExistingPieceToBar(this)) {
         final bar = parent?.children.whereType<Bar>().firstOrNull;
         if (bar != null) {
           point?.removePiece(this);
-          bar.acquirePiece(this);
+          closestPoint.swapOpposingPieces(this, bar);
           isMoving = true;
         }
       } else if (closestPoint.canAcceptPiece(this)) {

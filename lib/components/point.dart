@@ -1,4 +1,5 @@
 import 'package:backgammon/backgammon_game.dart';
+import 'package:backgammon/components/bar.dart';
 import 'package:backgammon/components/piece.dart';
 import 'package:backgammon/components/quadrant.dart';
 import 'package:flame/components.dart';
@@ -17,14 +18,12 @@ class Point extends PositionComponent {
   final List<Piece> _pieces = [];
 
   bool canAcceptPiece(Piece piece) {
-    return _pieces.where((p) => p.owner != piece.owner).isEmpty && _pieces.length < BackgammonGame.maxPiecesPerPoint;
+    return _pieces.where((p) => p.owner != piece.owner).length < 2 && _pieces.length < BackgammonGame.maxPiecesPerPoint;
   }
 
-  bool canSendPieceToBar(Piece piece) => _pieces.length == 1 && _pieces.first.owner != piece.owner;
-
   void acquirePiece(Piece piece) {
-    assert(!canSendPieceToBar(piece), 'This point shouldn\'t acquire a different owners piece right now');
     assert(canAcceptPiece(piece));
+    assert(!canSendExistingPieceToBar(piece), 'This point shouldn\'t acquire a different owners piece right now');
 
     piece.priority = _pieces.length;
     piece.point = this;
@@ -32,6 +31,19 @@ class Point extends PositionComponent {
 
     _pieces.add(piece);
     _positionPieces();
+  }
+
+  bool canSendExistingPieceToBar(Piece piece) => _pieces.length == 1 && _pieces.first.owner != piece.owner;
+
+  void swapOpposingPieces(Piece piece, Bar bar) {
+    assert(canAcceptPiece(piece));
+    assert(canSendExistingPieceToBar(piece));
+
+    final opposingPiece = _pieces.first;
+    bar.acquirePiece(opposingPiece);
+    _pieces.clear();
+
+    acquirePiece(piece);
   }
 
   void removePiece(Piece piece) {
