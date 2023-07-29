@@ -6,7 +6,12 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
 
-enum PieceOwner { player, opponent }
+enum PieceOwner {
+  player,
+  opponent;
+
+  bool get isPlayer => this == player;
+}
 
 enum PieceColor { silver, white, red, green, yellow, emerald, purple, blue, orange }
 
@@ -44,6 +49,7 @@ class Piece extends PositionComponent with DragCallbacks {
       return;
     }
 
+    priority = 100;
     final delta = event.delta / cameraZoomLevel;
     position += delta;
   }

@@ -1,3 +1,4 @@
+import 'package:backgammon/components/bar.dart';
 import 'package:backgammon/components/piece.dart';
 import 'package:backgammon/components/quadrant.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
@@ -18,6 +19,8 @@ class BackgammonGame extends FlameGame {
   static final Vector2 quadrantSize = Vector2(_pointWidth * 6, _pointHeight);
   static final Vector2 boardSize = Vector2(_pointWidth * 12, _pointHeight * 2);
 
+  static const int maxPiecesPerPoint = 5;
+
   @override
   Future<void> onLoad() async {
     for (final spriteAsset in SpriteAssetType.values) {
@@ -29,7 +32,7 @@ class BackgammonGame extends FlameGame {
     final quadrants = [
       Quadrant(type: QuadrantType.topLeft, position: Vector2(0, quadrantSize.y)),
       Quadrant(type: QuadrantType.bottomLeft, position: Vector2(0, quadrantSize.y * 2)),
-      Quadrant(type: QuadrantType.topRight, position: Vector2(quadrantSize.x, quadrantSize.y)),
+      Quadrant(type: QuadrantType.topRight, position: Vector2(quadrantSize.x + barSize.x, quadrantSize.y)),
       Quadrant(
         type: QuadrantType.bottomRight,
         position: Vector2(quadrantSize.x, quadrantSize.y * 2),
@@ -39,24 +42,31 @@ class BackgammonGame extends FlameGame {
     await world.addAll(quadrants);
 
     for (final quadrant in quadrants) {
+      final points = <Point>[];
       for (var i = 0; i < 6; i++) {
         final point = Point(
           order: i,
           position: Vector2(quadrant.position.x + (quadrant.size.x / 6 * i), quadrant.position.y),
+          size: Vector2(quadrant.size.x / 6, quadrant.size.y),
         );
-        point.size = Vector2(quadrant.size.x / 6, quadrant.size.y);
+        points.add(point);
         world.add(point);
+
+        final (pieceOwner, numberOfPieces) = quadrant.type.startingPositions[i];
+        if (pieceOwner != null) {
+          for (var j = 0; j < numberOfPieces; j++) {
+            final piece = Piece(
+              owner: pieceOwner,
+              color: pieceOwner.isPlayer ? PieceColor.silver : PieceColor.orange,
+            );
+
+            point.acquirePiece(piece);
+            world.add(piece);
+          }
+        }
       }
-    }
 
-    for (var i = 0; i < 1; i++) {
-      final piece = Piece(
-        owner: PieceOwner.player,
-        color: PieceColor.silver,
-        position: Vector2(boardSize.x * 0.75, boardSize.y),
-      );
-
-      world.add(piece);
+      quadrant.points.addAll(points);
     }
 
     add(world);

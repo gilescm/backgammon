@@ -7,32 +7,54 @@ class Point extends PositionComponent {
   Point({
     required this.order,
     super.position,
+    super.size,
   });
 
-  final int order;
+  @override
+  bool get debugMode => false;
 
-  final List<Piece> pieces = [];
+  final int order;
+  final List<Piece> _pieces = [];
 
   void acquirePiece(Piece piece) {
-    piece.position = Vector2(
-      position.x + BackgammonGame.pointSize.x / 2 - piece.size.x / 2,
-      _currentQuadrantType.isTop ? position.y : position.y + size.y - piece.size.y,
-    );
+    assert(_pieces.length <= BackgammonGame.maxPiecesPerPoint);
 
-    piece.priority = pieces.length;
+    piece.priority = _pieces.length;
     piece.point = this;
-    pieces.add(piece);
+
+    _pieces.add(piece);
+    _positionPieces();
   }
 
   void removePiece(Piece piece) {
-    pieces.remove(piece);
+    _pieces.remove(piece);
+    _positionPieces();
   }
-
-  @override
-  bool get debugMode => true;
 
   QuadrantType get _currentQuadrantType {
     final nearbyPoints = parent!.componentsAtPoint(position + size / 2).whereType<Quadrant>().toList();
     return nearbyPoints.first.type;
+  }
+
+  void _positionPieces() {
+    if (_pieces.isEmpty) {
+      return;
+    }
+
+    final isInTopHalf = _currentQuadrantType.isTop;
+    final firstPiece = _pieces[0];
+    final middlePosition = Vector2(
+      position.x + BackgammonGame.pointSize.x / 2 - firstPiece.size.x / 2,
+      isInTopHalf ? position.y : position.y + size.y - firstPiece.size.y,
+    );
+
+    firstPiece.position.setFrom(middlePosition);
+    for (var i = 1; i < _pieces.length; i++) {
+      _pieces[i].position
+        ..setFrom(_pieces[i - 1].position)
+        ..add(Vector2(0, (isInTopHalf ? 1 : -1) * _pieces[i].size.y));
+    }
+
+    // height = KlondikeGame.cardHeight * 1.5 + cards.last.y - cards.first.y;
   }
 }
