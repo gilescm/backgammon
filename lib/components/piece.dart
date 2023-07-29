@@ -44,6 +44,11 @@ class Piece extends PositionComponent with DragCallbacks {
       return;
     }
 
+    final worldBar = _worldBar;
+    if (worldBar != null && point != null && worldBar.containsPiecesFor(owner)) {
+      return;
+    }
+
     super.onDragStart(event);
   }
 
@@ -69,10 +74,10 @@ class Piece extends PositionComponent with DragCallbacks {
     if (nearbyPoints.isNotEmpty) {
       final closestPoint = nearbyPoints.first;
       if (closestPoint.canSendExistingPieceToBar(this)) {
-        final bar = parent?.children.whereType<Bar>().firstOrNull;
-        if (bar != null) {
+        final worldBar = _worldBar;
+        if (worldBar != null) {
           point?.removePiece(this);
-          closestPoint.swapOpposingPieces(this, bar);
+          closestPoint.swapOpposingPieces(this, worldBar);
           isMoving = true;
         }
       } else if (closestPoint.canAcceptPiece(this)) {
@@ -100,4 +105,6 @@ class Piece extends PositionComponent with DragCallbacks {
       anchor: Anchor.centerLeft,
     );
   }
+
+  Bar? get _worldBar => parent?.children.whereType<Bar>().firstOrNull;
 }

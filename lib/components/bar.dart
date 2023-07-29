@@ -25,6 +25,8 @@ class Bar extends PositionComponent {
     height: 208,
   );
 
+  bool containsPiecesFor(PieceOwner owner) => _pieces.any((piece) => piece.owner == owner);
+
   void acquirePiece(Piece piece) {
     piece.priority = _pieces.length;
     piece.bar = this;
