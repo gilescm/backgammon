@@ -17,6 +17,8 @@ class Point extends PositionComponent {
   final int order;
   final List<Piece> _pieces = [];
 
+  bool isTopPiece(Piece piece) => _pieces.isNotEmpty && _pieces.last == piece;
+
   bool canAcceptPiece(Piece piece) {
     return _pieces.where((p) => p.owner != piece.owner).length < 2 && _pieces.length < BackgammonGame.maxPiecesPerPoint;
   }

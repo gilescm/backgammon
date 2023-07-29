@@ -50,6 +50,16 @@ class Piece extends PositionComponent with DragCallbacks {
   };
 
   @override
+  void onDragStart(DragStartEvent event) {
+    final point = this.point;
+    if (bar == null && (point == null || !point.isTopPiece(this))) {
+      return;
+    }
+
+    super.onDragStart(event);
+  }
+
+  @override
   void onDragUpdate(DragUpdateEvent event) {
     if (!isDragged) {
       return;
