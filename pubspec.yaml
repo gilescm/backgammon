@@ -1,0 +1,22 @@
+name: backgammon
+description: Backgammon Flame game
+version: 0.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  flame: ^1.8.1
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+  assets:
+    - assets/images/
