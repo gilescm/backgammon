@@ -1,6 +1,7 @@
 import 'package:backgammon/game/backgammon_game.dart';
 import 'package:backgammon/game/backgammon_widget.dart';
-import 'package:backgammon/game_stats/game_stats.dart';
+import 'package:backgammon/game_hud/game_stats.dart';
+import 'package:backgammon/game_hud/game_stats_quick_reference.dart';
 import 'package:backgammon/widgets/secret_overlay.dart';
 import 'package:flutter/material.dart';
 
@@ -13,22 +14,30 @@ class BackgammonApp extends StatelessWidget {
     return SafeArea(
       top: true,
       child: SecretOverlay(
-        child: Scaffold(
-          backgroundColor: Colors.cyan,
-          body: Row(
-            children: [
-              ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: screenWidth * .75),
-                child: const BackgammonWidget.controlled(
-                  gameFactory: BackgammonGame.new,
-                ),
+        child: OrientationBuilder(
+          builder: (context, orientation) {
+            if (orientation == Orientation.portrait) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            return Scaffold(
+              backgroundColor: Colors.cyan,
+              endDrawer: const Drawer(child: GameStatsAndRulesDrawer()),
+              body: Row(
+                children: [
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: screenWidth * .8),
+                    child: const BackgammonWidget.controlled(
+                      gameFactory: BackgammonGame.new,
+                    ),
+                  ),
+                  const GameStatsQuickReference(),
+                ],
               ),
-              ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: screenWidth * .25),
-                child: const GameStatsSideBar(),
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

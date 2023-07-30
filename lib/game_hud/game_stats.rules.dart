@@ -37,7 +37,7 @@ class _GeneralRules extends StatelessWidget {
                 title: 'Movement',
                 body: 'You can move up to two pieces the value of one die each, or you can move'
                     ' one piece the total value of both dice. If you can\'t go then end your turn'
-                    ' by tapping the button in the bottom right',
+                    ' by tapping the button in the side menu.',
               );
             },
           ),
@@ -50,7 +50,7 @@ class _GeneralRules extends StatelessWidget {
                 title: 'Movement direction',
                 body: 'Move ${isPlayer ? 'anti-clockwise' : 'clockwise'} around the board between points'
                     ' (the white and red areas). You can only move to "open" points. An "open" point is one that has '
-                    'no more than 2 opposing pieces',
+                    'no more than 2 opposing pieces.',
               );
             },
           ),
