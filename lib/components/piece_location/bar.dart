@@ -23,7 +23,6 @@ class Bar extends PieceLocation {
 
   @override
   void acquirePiece(Piece piece) {
-    piece.priority = _pieces.length;
     piece.location = this;
 
     _pieces.add(piece);
@@ -73,6 +72,7 @@ class Bar extends PieceLocation {
 
     if (pieces.length > 1) {
       for (var i = 1; i < pieces.length; i++) {
+        pieces[i].priority = i * pieces[i].owner.barDirection;
         pieces[i].position
           ..setFrom(pieces[i - 1].position)
           ..add(Vector2(0, pieces[i].size.y * (1 / 3) * firstPiece.owner.barDirection));
