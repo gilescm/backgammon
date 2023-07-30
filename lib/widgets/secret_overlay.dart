@@ -1,6 +1,8 @@
 import 'package:backgammon/game/backgammon_state.dart';
+import 'package:backgammon/router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 final secretStateProvider = StateProvider<SecretState>((ref) {
   final gameState = ref.watch(backgammonStateProvider);
@@ -60,11 +62,12 @@ class SecretOverlayState extends ConsumerState<SecretOverlay> {
       } else {
         _totalRightTaps++;
       }
-    } else {
-      _resetTaps();
-    }
 
-    if (secretState.hasDiscoveredSecret(_totalLeftTaps, _totalRightTaps)) {
+      if (secretState.hasDiscoveredSecret(_totalLeftTaps, _totalRightTaps)) {
+        context.go(RouteNames.webview.goName);
+        _resetTaps();
+      }
+    } else {
       _resetTaps();
     }
   }
