@@ -8,10 +8,11 @@ final secretStateProvider = StateProvider<SecretState>((ref) {
   final gameState = ref.watch(backgammonStateProvider);
   final dieValues = List<int>.from(gameState.dieValues)..sort((a, b) => a - b);
 
-  return SecretState(
-    tapsOnLeft: dieValues[0],
-    tapsOnRight: dieValues[1],
-  );
+  if (dieValues.any((value) => value > 0)) {
+    return SecretState(tapsOnLeft: dieValues[0], tapsOnRight: dieValues[1]);
+  }
+
+  return SecretState(tapsOnLeft: 0, tapsOnRight: 0);
 });
 
 class SecretState {
