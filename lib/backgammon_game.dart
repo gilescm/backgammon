@@ -1,4 +1,3 @@
-import 'package:backgammon/backgammon_state.dart';
 import 'package:backgammon/components/component_enums.dart';
 import 'package:backgammon/components/dice.dart';
 import 'package:backgammon/components/piece.dart';
@@ -8,8 +7,14 @@ import 'package:backgammon/utils/sprite_utils.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
+import 'package:flame_riverpod/flame_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BackgammonGame extends FlameGame with BackgammonGameState {
+class BackgammonGame extends FlameGame with HasComponentRef {
+  BackgammonGame(WidgetRef ref) {
+    HasComponentRef.widgetRef = ref;
+  }
+
   static const double _gameUnit = 20.0;
 
   static const double _pointWidth = _gameUnit * 6;
@@ -20,7 +25,10 @@ class BackgammonGame extends FlameGame with BackgammonGameState {
   static final Vector2 pointSize = Vector2(_pointWidth, _pointHeight);
   static final Vector2 barSize = Vector2(pieceSize.x * 1.25, pointSize.y * 2);
   static final Vector2 quadrantSize = Vector2(_pointWidth * 6, _pointHeight);
-  static final Vector2 boardSize = Vector2(_pointWidth * 12 + barSize.x * 2, _pointHeight * 2);
+  static final Vector2 boardSize = Vector2(
+    _pointWidth * 12 + barSize.x * 2,
+    _pointHeight * 2,
+  );
 
   static const int maxPiecesPerPoint = 5;
   static const int pointsPerQuadrant = 6;

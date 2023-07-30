@@ -6,9 +6,10 @@ import 'package:backgammon/utils/position_component_utils.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:flutter/material.dart';
 
-class Piece extends PositionComponent with DragCallbacks, HasGameRef<BackgammonGame> {
+class Piece extends PositionComponent with DragCallbacks, HasComponentRef {
   Piece({
     required this.owner,
     required this.color,
@@ -44,7 +45,8 @@ class Piece extends PositionComponent with DragCallbacks, HasGameRef<BackgammonG
 
   @override
   void onDragStart(DragStartEvent event) {
-    if (!game.hasRolled || game.currentTurn != owner) {
+    final gameState = ref.read(backgammonStateProvider);
+    if (!gameState.canMovePiece(owner)) {
       return;
     }
 
@@ -83,6 +85,8 @@ class Piece extends PositionComponent with DragCallbacks, HasGameRef<BackgammonG
       return;
     }
 
+    final gameState = ref.read(backgammonStateProvider);
+
     var isMoving = false;
     final nearbyLocation = parent!.componentsAtPoint(position + size / 2).whereType<PieceLocation>().toList();
     if (nearbyLocation.isNotEmpty) {
@@ -94,10 +98,10 @@ class Piece extends PositionComponent with DragCallbacks, HasGameRef<BackgammonG
         case final Point point:
           final currentOrder = _location.locationOrder(owner);
           final diff = owner.isPlayer ? point.order - currentOrder : currentOrder - point.order;
-          final canMoveDistance = game.canMoveDistance(diff);
+          final canMoveDistance = gameState.canMoveDistance(diff);
 
           if (canMoveDistance && point.isValidNextMoveFor(this)) {
-            game.updateMovementStats(diff);
+            gameState.updateMovementStats(diff);
 
             if (point.canSendExistingPieceToBar(this)) {
               point.swapOpposingPieces(this);
@@ -108,8 +112,8 @@ class Piece extends PositionComponent with DragCallbacks, HasGameRef<BackgammonG
             isMoving = true;
           }
           break;
-        case final WinPile winPile:
-          // A Piece can only move to the win pile from a point
+        case final WinPile winPile: // A Piece can only move to the win pile from a point
+
           final currentLocation = _location;
           if (currentLocation is Point) {
             final currentOrder = currentLocation.order;
@@ -117,8 +121,8 @@ class Piece extends PositionComponent with DragCallbacks, HasGameRef<BackgammonG
                 ? winPile.locationOrder(owner) - currentOrder
                 : currentOrder - winPile.locationOrder(owner);
 
-            if (game.canMoveDistance(diff, type: MovementType.atMost)) {
-              game.updateMovementStats(diff, type: MovementType.atMost);
+            if (gameState.canMoveDistance(diff, type: MovementType.atMost)) {
+              gameState.updateMovementStats(diff, type: MovementType.atMost);
               winPile.acquirePiece(this);
               isMoving = true;
             }
@@ -129,7 +133,7 @@ class Piece extends PositionComponent with DragCallbacks, HasGameRef<BackgammonG
     }
 
     if (isMoving) {
-      game.maybeEndTurn(owner);
+      gameState.maybeEndTurn(owner);
     } else {
       location.returnPiece(this);
     }

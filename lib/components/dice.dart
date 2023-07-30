@@ -2,12 +2,14 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:backgammon/backgammon_game.dart';
+import 'package:backgammon/backgammon_state.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
+import 'package:flame_riverpod/flame_riverpod.dart';
 
-class Dice extends PositionComponent with TapCallbacks, HasGameRef<BackgammonGame> {
+class Dice extends PositionComponent with TapCallbacks, HasComponentRef {
   Dice()
       : super(
           position: Vector2(
@@ -17,13 +19,8 @@ class Dice extends PositionComponent with TapCallbacks, HasGameRef<BackgammonGam
           size: Vector2(BackgammonGame.buttonSize.x * 2, BackgammonGame.buttonSize.y),
         );
 
-  void _saveValuesToGame() {
-    game.dieValues.clear();
-    game.dieValues.addAll(children.query<_Die>().map((die) => die._value));
-  }
-
   @override
-  void onLoad() {
+  Future<void> onLoad() async {
     children.register<_Die>();
 
     final firstDieButton = _Die();
@@ -71,6 +68,13 @@ class Dice extends PositionComponent with TapCallbacks, HasGameRef<BackgammonGam
     _saveValuesToGame();
 
     super.onTapCancel(event);
+  }
+
+  void _saveValuesToGame() {
+    final gameState = ref.read(backgammonStateProvider);
+    gameState.updateDieValues(
+      children.query<_Die>().map((die) => die._value),
+    );
   }
 }
 
