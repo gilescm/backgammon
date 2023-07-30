@@ -1,11 +1,6 @@
-import 'dart:ui';
+part of 'piece_location.dart';
 
-import 'package:backgammon/backgammon_game.dart';
-import 'package:backgammon/components/piece.dart';
-import 'package:backgammon/utils/sprite_utils.dart';
-import 'package:flame/components.dart';
-
-class WinPile extends PositionComponent {
+class WinPile extends PieceLocation {
   WinPile()
       : super(
           position: Vector2(
@@ -25,6 +20,19 @@ class WinPile extends PositionComponent {
     width: 16,
     height: 208,
   );
+
+  @override
+  void acquirePiece(Piece piece) {
+    throw StateError('Implement');
+  }
+
+  @override
+  void removePiece(Piece piece) => throw StateError('Pieces cannot leave the win pile');
+
+  @override
+  void returnPiece(Piece piece) {
+    throw StateError('Pieces cannot leave the win pile so its illogical to attempt return');
+  }
 
   @override
   void render(Canvas canvas) {

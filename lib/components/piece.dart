@@ -1,7 +1,6 @@
 import 'package:backgammon/backgammon_game.dart';
-import 'package:backgammon/components/bar.dart';
 import 'package:backgammon/components/component_enums.dart';
-import 'package:backgammon/components/point.dart';
+import 'package:backgammon/components/piece_location/piece_location.dart';
 import 'package:backgammon/utils/position_component_utils.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
 import 'package:flame/components.dart';
@@ -12,7 +11,6 @@ class Piece extends PositionComponent with DragCallbacks {
   Piece({
     required this.owner,
     required this.color,
-    this.point,
     super.position,
   })  : assert(_sprites.containsKey(color)),
         _sprite = _sprites[color]!,
@@ -22,8 +20,12 @@ class Piece extends PositionComponent with DragCallbacks {
   final PieceColor color;
   final Sprite _sprite;
 
-  Point? point;
-  Bar? bar;
+  PieceLocation? get location => _location;
+  PieceLocation? _location;
+  set location(PieceLocation? value) {
+    _location?.removePiece(this);
+    _location = value;
+  }
 
   static final Map<PieceColor, Sprite> _sprites = {
     PieceColor.silver: backgammonSprite(SpriteAssetType.piece, x: 1, y: 18, width: 14, height: 16),
@@ -39,14 +41,22 @@ class Piece extends PositionComponent with DragCallbacks {
 
   @override
   void onDragStart(DragStartEvent event) {
-    final point = this.point;
-    if (bar == null && (point == null || !point.isTopPiece(this))) {
+    final location = this.location;
+    if (location == null) {
       return;
     }
 
-    final worldBar = _worldBar;
-    if (worldBar != null && point != null && worldBar.containsPiecesFor(owner)) {
-      return;
+    switch (location) {
+      case final Bar bar:
+        break;
+      case final Point point:
+        if (!point.isTopPiece(this) || _worldBar.containsPiecesFor(owner)) {
+          return;
+        }
+
+        break;
+      case final WinPile winPile:
+        break;
     }
 
     super.onDragStart(event);
@@ -70,27 +80,28 @@ class Piece extends PositionComponent with DragCallbacks {
     }
 
     var isMoving = false;
-    final nearbyPoints = parent!.componentsAtPoint(position + size / 2).whereType<Point>().toList();
-    if (nearbyPoints.isNotEmpty) {
-      final closestPoint = nearbyPoints.first;
-      if (closestPoint.canSendExistingPieceToBar(this)) {
-        final worldBar = _worldBar;
-        if (worldBar != null) {
-          point?.removePiece(this);
-          closestPoint.swapOpposingPieces(this, worldBar);
-          isMoving = true;
-        }
-      } else if (closestPoint.canAcceptPiece(this)) {
-        bar?.removePiece(this);
-        point?.removePiece(this);
-        closestPoint.acquirePiece(this);
-        isMoving = true;
+    final nearbyLocation = parent!.componentsAtPoint(position + size / 2).whereType<PieceLocation>().toList();
+    if (nearbyLocation.isNotEmpty) {
+      final closestLocation = nearbyLocation.first;
+      switch (closestLocation) {
+        case final Bar bar:
+          break;
+        case final Point point:
+          if (point.canSendExistingPieceToBar(this)) {
+            point.swapOpposingPieces(this);
+            isMoving = true;
+          } else if (point.canAcceptPiece(this)) {
+            point.acquirePiece(this);
+            isMoving = true;
+          }
+          break;
+        case final WinPile winPile:
+          break;
       }
     }
 
     if (!isMoving) {
-      point?.returnPiece(this);
-      bar?.returnPiece(this);
+      location?.returnPiece(this);
     }
 
     super.onDragEnd(event);
@@ -106,5 +117,5 @@ class Piece extends PositionComponent with DragCallbacks {
     );
   }
 
-  Bar? get _worldBar => parent?.children.whereType<Bar>().firstOrNull;
+  Bar get _worldBar => parent!.children.whereType<Bar>().first;
 }

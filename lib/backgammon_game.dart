@@ -1,14 +1,11 @@
-import 'package:backgammon/components/bar.dart';
 import 'package:backgammon/components/component_enums.dart';
 import 'package:backgammon/components/piece.dart';
+import 'package:backgammon/components/piece_location/piece_location.dart';
 import 'package:backgammon/components/quadrant.dart';
-import 'package:backgammon/components/win_pile.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
-
-import 'components/point.dart';
 
 class BackgammonGame extends FlameGame {
   static const double _gameUnit = 800.0;

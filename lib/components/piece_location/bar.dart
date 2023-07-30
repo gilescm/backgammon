@@ -1,14 +1,8 @@
-import 'dart:ui';
-
-import 'package:backgammon/backgammon_game.dart';
-import 'package:backgammon/components/component_enums.dart';
-import 'package:backgammon/components/piece.dart';
-import 'package:backgammon/utils/sprite_utils.dart';
-import 'package:flame/components.dart';
+part of 'piece_location.dart';
 
 /// This is purgatory/jail for the pieces. Captured pieces come
 /// here and wait for a lucky roll to be released
-class Bar extends PositionComponent {
+class Bar extends PieceLocation {
   Bar()
       : super(
           position: Vector2(BackgammonGame.quadrantSize.x, BackgammonGame.pointSize.y),
@@ -27,20 +21,22 @@ class Bar extends PositionComponent {
 
   bool containsPiecesFor(PieceOwner owner) => _pieces.any((piece) => piece.owner == owner);
 
+  @override
   void acquirePiece(Piece piece) {
     piece.priority = _pieces.length;
-    piece.bar = this;
-    piece.point = null;
+    piece.location = this;
 
     _pieces.add(piece);
     _positionPieces();
   }
 
+  @override
   void removePiece(Piece piece) {
     _pieces.remove(piece);
     _positionPieces();
   }
 
+  @override
   void returnPiece(Piece piece) {
     piece.priority = _pieces.length;
     _positionPieces();
