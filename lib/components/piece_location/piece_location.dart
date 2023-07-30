@@ -1,9 +1,11 @@
 import 'package:backgammon/backgammon_game.dart';
+import 'package:backgammon/backgammon_state.dart';
 import 'package:backgammon/components/component_enums.dart';
 import 'package:backgammon/components/piece.dart';
 import 'package:backgammon/components/quadrant.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
 import 'package:flame/components.dart';
+import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:flutter/material.dart';
 
 part 'bar.dart';

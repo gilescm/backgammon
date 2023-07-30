@@ -2,7 +2,7 @@ part of 'piece_location.dart';
 
 /// This is purgatory/jail for the pieces. Captured pieces come
 /// here and wait for a lucky roll to be released
-class Bar extends PieceLocation {
+class Bar extends PieceLocation with HasComponentRef {
   Bar()
       : super(
           position: Vector2(BackgammonGame.quadrantSize.x, BackgammonGame.pointSize.y),
@@ -25,18 +25,27 @@ class Bar extends PieceLocation {
   void acquirePiece(Piece piece) {
     piece.location = this;
 
+    final gameNotifier = ref.read(backgammonStateProvider.notifier);
+    gameNotifier.updatePlayerWithPiecesInBar(piece.owner, type: BarMovementType.capturing);
+
     _pieces.add(piece);
     _positionPieces();
   }
 
   @override
   void removePiece(Piece piece) {
+    final gameNotifier = ref.read(backgammonStateProvider.notifier);
+    gameNotifier.updatePlayerWithPiecesInBar(piece.owner, type: BarMovementType.escaping);
+
     _pieces.remove(piece);
     _positionPieces();
   }
 
   @override
   void returnPiece(Piece piece) {
+    final gameNotifier = ref.read(backgammonStateProvider.notifier);
+    gameNotifier.updatePlayerWithPiecesInBar(piece.owner, type: BarMovementType.escaping);
+
     piece.priority = _pieces.length;
     _positionPieces();
   }
