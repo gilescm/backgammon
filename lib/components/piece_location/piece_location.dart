@@ -29,7 +29,7 @@ sealed class PieceLocation extends PositionComponent {
         return -1;
       case Bar _:
         if (owner.isPlayer) {
-          return 0;
+          return -1;
         }
 
         return BackgammonGame.numberOfQuadrants * BackgammonGame.pointsPerQuadrant;
