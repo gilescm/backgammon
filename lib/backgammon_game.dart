@@ -1,4 +1,4 @@
-import 'package:backgammon/backgammon_stats.dart';
+import 'package:backgammon/backgammon_state.dart';
 import 'package:backgammon/components/component_enums.dart';
 import 'package:backgammon/components/dice.dart';
 import 'package:backgammon/components/piece.dart';
@@ -9,7 +9,7 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 
-class BackgammonGame extends FlameGame with BackgammonGameStats {
+class BackgammonGame extends FlameGame with BackgammonGameState {
   static const double _gameUnit = 20.0;
 
   static const double _pointWidth = _gameUnit * 6;
@@ -24,6 +24,9 @@ class BackgammonGame extends FlameGame with BackgammonGameStats {
 
   static const int maxPiecesPerPoint = 5;
   static const int pointsPerQuadrant = 6;
+  static const int numberOfQuadrants = 4;
+
+  final world = World();
 
   @override
   Future<void> onLoad() async {
@@ -33,17 +36,15 @@ class BackgammonGame extends FlameGame with BackgammonGameStats {
       await Flame.images.load(spriteAsset.path);
     }
 
-    final world = World();
-
     final bar = Bar();
     final winPile = WinPile();
     world.add(bar);
     world.add(winPile);
 
     final quadrants = [
+      Quadrant(type: QuadrantType.topRight, position: Vector2(quadrantSize.x + barSize.x, quadrantSize.y)),
       Quadrant(type: QuadrantType.topLeft, position: Vector2(0, quadrantSize.y)),
       Quadrant(type: QuadrantType.bottomLeft, position: Vector2(0, quadrantSize.y * 2)),
-      Quadrant(type: QuadrantType.topRight, position: Vector2(quadrantSize.x + barSize.x, quadrantSize.y)),
       Quadrant(
         type: QuadrantType.bottomRight,
         position: Vector2(quadrantSize.x + barSize.x, quadrantSize.y * 2),
@@ -54,16 +55,14 @@ class BackgammonGame extends FlameGame with BackgammonGameStats {
     world.addAll(quadrants);
 
     for (final quadrant in quadrants) {
-      final points = <Point>[];
-
       for (var i = 0; i < pointsPerQuadrant; i++) {
+        final quadrantOffset = quadrants.indexOf(quadrant) * pointsPerQuadrant;
         final point = Point(
           quadrantType: quadrant.type,
-          order: quadrant.type.isTop ? pointsPerQuadrant - i - 1 : i,
+          order: quadrantOffset + (quadrant.type.isTop ? pointsPerQuadrant - i - 1 : i),
           position: Vector2(quadrant.position.x + (quadrant.size.x / 6 * i), quadrant.position.y),
           size: Vector2(quadrant.size.x / 6, quadrant.size.y),
         );
-        points.add(point);
         world.add(point);
 
         final (pieceOwner, numberOfPieces) = quadrant.type.startingPositions[i];

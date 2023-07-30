@@ -10,11 +10,13 @@ class Point extends PieceLocation {
         _order = order;
 
   final QuadrantType _quadrantType;
-  final int _order;
   final List<Piece> _visiblePieces = [];
   final List<Piece> _pieces = [];
 
-  bool isInValidDirectionFor(Piece piece) {
+  int get order => _order;
+  final int _order;
+
+  bool isValidNextMoveFor(Piece piece) {
     final owner = piece.owner;
     switch (piece.location) {
       case final WinPile _:
@@ -22,30 +24,18 @@ class Point extends PieceLocation {
       case final Bar _:
         return _quadrantType.isStartingQuadrantFor(owner);
       case final Point currentPoint:
-        final isInSameQuadrant = currentPoint._quadrantType == _quadrantType;
-        if (isInSameQuadrant) {
-          final diff = _order - currentPoint._order;
-          return owner.isPlayer ? diff > 0 : diff < 0;
-        }
+        final diff = _order - currentPoint._order;
+        final canMoveInDirection = owner.isPlayer ? diff > 0 : diff < 0;
 
-        if (_quadrantType.isNextQuadrantFor(owner, currentPoint._quadrantType)) {
-          return true;
-        }
+        final opposingPieces = _pieces.where((p) => p.owner != piece.owner).length;
+        final canAcceptPiece = opposingPieces < 2 && _pieces.length < BackgammonGame.maxPiecesPerPoint;
 
-        return false;
+        return canAcceptPiece && canMoveInDirection;
     }
-
-    final pieceDirection = piece.owner.direction;
-    return true;
-  }
-
-  bool canAcceptPiece(Piece piece) {
-    return _pieces.where((p) => p.owner != piece.owner).length < 2 && _pieces.length < BackgammonGame.maxPiecesPerPoint;
   }
 
   @override
   void acquirePiece(Piece piece) {
-    assert(canAcceptPiece(piece), 'This point cannot acquire a different owners piece right now');
     assert(!canSendExistingPieceToBar(piece));
 
     piece.priority = _pieces.length;
@@ -80,7 +70,6 @@ class Point extends PieceLocation {
   bool canSendExistingPieceToBar(Piece piece) => _pieces.length == 1 && _pieces.first.owner != piece.owner;
 
   void swapOpposingPieces(Piece piece) {
-    assert(canAcceptPiece(piece));
     assert(canSendExistingPieceToBar(piece));
 
     final opposingPiece = _pieces.first;

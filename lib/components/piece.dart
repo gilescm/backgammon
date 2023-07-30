@@ -1,4 +1,5 @@
 import 'package:backgammon/backgammon_game.dart';
+import 'package:backgammon/backgammon_state.dart';
 import 'package:backgammon/components/component_enums.dart';
 import 'package:backgammon/components/piece_location/piece_location.dart';
 import 'package:backgammon/utils/position_component_utils.dart';
@@ -91,27 +92,46 @@ class Piece extends PositionComponent with DragCallbacks, HasGameRef<BackgammonG
           // Manual placement onto the bar is not allowed
           break;
         case final Point point:
-          if (point.isInValidDirectionFor(this)) {
+          final currentOrder = _location.locationOrder(owner);
+          final diff = owner.isPlayer ? point.order - currentOrder : currentOrder - point.order;
+          final canMoveDistance = game.canMoveDistance(diff);
+
+          if (canMoveDistance && point.isValidNextMoveFor(this)) {
+            game.updateMovementStats(diff);
+
             if (point.canSendExistingPieceToBar(this)) {
               point.swapOpposingPieces(this);
-              isMoving = true;
-            } else if (point.canAcceptPiece(this)) {
+            } else {
               point.acquirePiece(this);
-              isMoving = true;
             }
+
+            isMoving = true;
           }
           break;
         case final WinPile winPile:
-          winPile.acquirePiece(this);
-          isMoving = true;
+          // A Piece can only move to the win pile from a point
+          final currentLocation = _location;
+          if (currentLocation is Point) {
+            final currentOrder = currentLocation.order;
+            final diff = owner.isPlayer
+                ? winPile.locationOrder(owner) - currentOrder
+                : currentOrder - winPile.locationOrder(owner);
+
+            if (game.canMoveDistance(diff, type: MovementType.atMost)) {
+              game.updateMovementStats(diff, type: MovementType.atMost);
+              winPile.acquirePiece(this);
+              isMoving = true;
+            }
+          }
+
           break;
       }
     }
 
-    if (!isMoving) {
-      location.returnPiece(this);
+    if (isMoving) {
+      game.maybeEndTurn(owner);
     } else {
-      game.currentTurn = owner.other;
+      location.returnPiece(this);
     }
 
     super.onDragEnd(event);
