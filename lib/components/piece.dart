@@ -11,8 +11,10 @@ class Piece extends PositionComponent with DragCallbacks {
   Piece({
     required this.owner,
     required this.color,
+    required PieceLocation location,
     super.position,
   })  : assert(_sprites.containsKey(color)),
+        _location = location,
         _sprite = _sprites[color]!,
         super(size: BackgammonGame.pieceSize);
 
@@ -20,10 +22,10 @@ class Piece extends PositionComponent with DragCallbacks {
   final PieceColor color;
   final Sprite _sprite;
 
-  PieceLocation? get location => _location;
-  PieceLocation? _location;
-  set location(PieceLocation? value) {
-    _location?.removePiece(this);
+  PieceLocation get location => _location;
+  PieceLocation _location;
+  set location(PieceLocation value) {
+    _location.removePiece(this);
     _location = value;
   }
 
@@ -41,12 +43,7 @@ class Piece extends PositionComponent with DragCallbacks {
 
   @override
   void onDragStart(DragStartEvent event) {
-    final location = this.location;
-    if (location == null) {
-      return;
-    }
-
-    switch (location) {
+    switch (_location) {
       case final Bar _:
         break;
       case final WinPile _:
@@ -105,7 +102,7 @@ class Piece extends PositionComponent with DragCallbacks {
     }
 
     if (!isMoving) {
-      location?.returnPiece(this);
+      location.returnPiece(this);
     }
 
     super.onDragEnd(event);

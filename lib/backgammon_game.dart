@@ -65,6 +65,7 @@ class BackgammonGame extends FlameGame {
             final piece = Piece(
               owner: pieceOwner,
               color: pieceOwner.isPlayer ? PieceColor.silver : PieceColor.orange,
+              location: point,
             );
 
             point.acquirePiece(piece);
