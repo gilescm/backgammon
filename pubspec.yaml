@@ -11,6 +11,7 @@ dependencies:
   flame_riverpod: ^4.0.0+2
   flutter:
     sdk: flutter
+  flutter_dialogs: ^3.0.0
   flutter_riverpod: ^2.3.6
 
 dev_dependencies:

@@ -1,5 +1,5 @@
 import 'package:backgammon/backgammon_game.dart';
-import 'package:backgammon/game_stats.dart';
+import 'package:backgammon/game_stats/game_stats.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,23 +15,26 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final screenSize = MediaQuery.sizeOf(context);
+    final screenWidth = MediaQuery.sizeOf(context).width;
     return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.blue,
-        body: Row(
-          children: [
-            ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: screenSize.width * .85),
-              child: GameWidget(
-                game: BackgammonGame(ref),
+      home: SafeArea(
+        top: true,
+        child: Scaffold(
+          backgroundColor: Colors.blue,
+          body: Row(
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: screenWidth * .75),
+                child: GameWidget(
+                  game: BackgammonGame(ref),
+                ),
               ),
-            ),
-            ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: screenSize.width * .15),
-              child: const GameStats(),
-            ),
-          ],
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: screenWidth * .25),
+                child: const GameStats(),
+              ),
+            ],
+          ),
         ),
       ),
     );
