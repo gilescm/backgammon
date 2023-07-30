@@ -20,6 +20,7 @@ class BackgammonGame extends FlameGame {
   static final Vector2 boardSize = Vector2(_pointWidth * 12 + barSize.x * 2, _pointHeight * 2);
 
   static const int maxPiecesPerPoint = 5;
+  static const int pointsPerQuadrant = 6;
 
   @override
   Future<void> onLoad() async {
@@ -50,7 +51,8 @@ class BackgammonGame extends FlameGame {
 
     for (final quadrant in quadrants) {
       final points = <Point>[];
-      for (var i = 0; i < 6; i++) {
+
+      for (var i = 0; i < pointsPerQuadrant; i++) {
         final point = Point(
           order: i,
           position: Vector2(quadrant.position.x + (quadrant.size.x / 6 * i), quadrant.position.y),
@@ -73,8 +75,6 @@ class BackgammonGame extends FlameGame {
           }
         }
       }
-
-      quadrant.points.addAll(points);
     }
 
     add(world);
