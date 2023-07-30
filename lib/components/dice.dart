@@ -13,10 +13,10 @@ class Dice extends PositionComponent with TapCallbacks, HasComponentRef {
   Dice()
       : super(
           position: Vector2(
-            BackgammonGame.quadrantSize.x,
-            BackgammonGame.quadrantSize.y * 2 - BackgammonGame.buttonSize.y / 2,
+            BackgammonGame.quadrantSize.x + BackgammonGame.dieSize.x * 0.15,
+            BackgammonGame.quadrantSize.y * 2 - BackgammonGame.dieSize.y,
           ),
-          size: Vector2(BackgammonGame.buttonSize.x * 2, BackgammonGame.buttonSize.y),
+          size: Vector2(BackgammonGame.dieSize.x, BackgammonGame.dieSize.y * 2),
         );
 
   @override
@@ -25,7 +25,7 @@ class Dice extends PositionComponent with TapCallbacks, HasComponentRef {
 
     final firstDieButton = _Die();
     final secondDieButton = _Die(
-      position: firstDieButton.position + Vector2(BackgammonGame.buttonSize.x, 0),
+      position: firstDieButton.position + Vector2(0, BackgammonGame.dieSize.y),
     );
 
     add(firstDieButton);
@@ -81,7 +81,7 @@ class Dice extends PositionComponent with TapCallbacks, HasComponentRef {
 /// Custom version of a "ButtonComponent" for use only in the
 /// `TwoDice` component to help "animate" the two die's.
 class _Die extends PositionComponent with HasAncestor<Dice> {
-  _Die({super.position}) : super(size: BackgammonGame.buttonSize) {
+  _Die({super.position}) : super(size: BackgammonGame.dieSize) {
     _initSprites();
   }
 
@@ -112,7 +112,7 @@ class _Die extends PositionComponent with HasAncestor<Dice> {
   void _initSprites() {
     _button = SpriteGroupComponent<int>(
       position: Vector2.zero(),
-      size: BackgammonGame.buttonSize,
+      size: BackgammonGame.dieSize,
       current: _value == 0 ? math.min(_rand.nextInt(6) + 1, 6) : _value,
       sprites: {
         1: backgammonSprite(
@@ -168,8 +168,8 @@ class _Die extends PositionComponent with HasAncestor<Dice> {
         amountPerRow: 6,
         stepTime: 0.2,
       ),
-      position: Vector2(-BackgammonGame.buttonSize.x / 2, 0),
-      size: Vector2(BackgammonGame.buttonSize.x * 2, BackgammonGame.buttonSize.y),
+      position: Vector2(-BackgammonGame.dieSize.x / 2, 0),
+      size: Vector2(BackgammonGame.dieSize.x * 2, BackgammonGame.dieSize.y),
     );
 
     add(_button);
