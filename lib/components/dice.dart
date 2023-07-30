@@ -115,48 +115,14 @@ class _Die extends PositionComponent with HasAncestor<Dice> {
       size: BackgammonGame.dieSize,
       current: _value == 0 ? math.min(_rand.nextInt(6) + 1, 6) : _value,
       sprites: {
-        1: backgammonSprite(
-          SpriteAssetType.die,
-          x: 8,
-          y: 0,
-          width: 16,
-          height: 16,
-        ),
-        2: backgammonSprite(
-          SpriteAssetType.die,
-          x: 8 + 64,
-          y: 16,
-          width: 16,
-          height: 16,
-        ),
-        3: backgammonSprite(
-          SpriteAssetType.die,
-          x: 8 + 64,
-          y: 0,
-          width: 16,
-          height: 16,
-        ),
-        4: backgammonSprite(
-          SpriteAssetType.die,
-          x: 8 + 64 * 2,
-          y: 16,
-          width: 16,
-          height: 16,
-        ),
-        5: backgammonSprite(
-          SpriteAssetType.die,
-          x: 8 + 64 * 3,
-          y: 17,
-          width: 16,
-          height: 16,
-        ),
-        6: backgammonSprite(
-          SpriteAssetType.die,
-          x: 8 + 64 * 2,
-          y: 0,
-          width: 16,
-          height: 16,
-        ),
+        for (final dieSprite in dieSprites.entries)
+          dieSprite.key: backgammonSprite(
+            dieSprite.value.type,
+            x: dieSprite.value.x,
+            y: dieSprite.value.y,
+            width: dieSprite.value.width,
+            height: dieSprite.value.height,
+          ),
       },
     );
 

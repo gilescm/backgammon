@@ -15,9 +15,15 @@ class Piece extends PositionComponent with DragCallbacks, HasComponentRef {
     required this.color,
     required PieceLocation location,
     super.position,
-  })  : assert(_sprites.containsKey(color)),
+  })  : assert(pieceSprites.containsKey(owner.pieceColor)),
         _location = location,
-        _sprite = _sprites[color]!,
+        _sprite = backgammonSprite(
+          pieceSprites[owner.pieceColor]!.type,
+          x: pieceSprites[owner.pieceColor]!.x,
+          y: pieceSprites[owner.pieceColor]!.y,
+          width: pieceSprites[owner.pieceColor]!.width,
+          height: pieceSprites[owner.pieceColor]!.height,
+        ),
         super(size: BackgammonGame.pieceSize);
 
   final Player owner;
@@ -30,18 +36,6 @@ class Piece extends PositionComponent with DragCallbacks, HasComponentRef {
     _location.removePiece(this);
     _location = value;
   }
-
-  static final Map<PieceColor, Sprite> _sprites = {
-    PieceColor.silver: backgammonSprite(SpriteAssetType.piece, x: 1, y: 18, width: 14, height: 16),
-    PieceColor.white: backgammonSprite(SpriteAssetType.piece, x: 1, y: 66, width: 14, height: 16),
-    PieceColor.red: backgammonSprite(SpriteAssetType.piece, x: 1, y: 114, width: 14, height: 16),
-    PieceColor.green: backgammonSprite(SpriteAssetType.piece, x: 1, y: 162, width: 14, height: 16),
-    PieceColor.yellow: backgammonSprite(SpriteAssetType.piece, x: 1, y: 210, width: 14, height: 16),
-    PieceColor.emerald: backgammonSprite(SpriteAssetType.piece, x: 1, y: 258, width: 14, height: 16),
-    PieceColor.purple: backgammonSprite(SpriteAssetType.piece, x: 1, y: 306, width: 14, height: 16),
-    PieceColor.blue: backgammonSprite(SpriteAssetType.piece, x: 1, y: 354, width: 14, height: 16),
-    PieceColor.orange: backgammonSprite(SpriteAssetType.piece, x: 1, y: 402, width: 14, height: 16),
-  };
 
   @override
   void onDragStart(DragStartEvent event) {
