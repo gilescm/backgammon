@@ -12,10 +12,10 @@ import 'package:flutter/material.dart';
 class Piece extends PositionComponent with DragCallbacks, HasComponentRef {
   Piece({
     required this.owner,
-    required this.color,
     required PieceLocation location,
     super.position,
   })  : assert(pieceSprites.containsKey(owner.pieceColor)),
+        color = owner.pieceColor,
         _location = location,
         _sprite = backgammonSprite(
           pieceSprites[owner.pieceColor]!.type,

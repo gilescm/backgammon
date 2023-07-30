@@ -73,11 +73,7 @@ class BackgammonGame extends FlameGame with HasComponentRef {
         final (pieceOwner, numberOfPieces) = quadrant.type.startingPositions[i];
         if (pieceOwner != null) {
           for (var j = 0; j < numberOfPieces; j++) {
-            final piece = Piece(
-              owner: pieceOwner,
-              color: pieceOwner.isPlayer ? PieceColor.silver : PieceColor.orange,
-              location: point,
-            );
+            final piece = Piece(owner: pieceOwner, location: point);
 
             point.acquirePiece(piece);
             world.add(piece);

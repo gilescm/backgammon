@@ -1,10 +1,11 @@
 enum Player {
-  player(-1),
-  opponent(1);
+  player(-1, PieceColor.silver),
+  opponent(1, PieceColor.orange);
 
-  const Player(this.direction);
+  const Player(this.direction, this.pieceColor);
 
   final int direction;
+  final PieceColor pieceColor;
 
   bool get isPlayer => this == player;
 
