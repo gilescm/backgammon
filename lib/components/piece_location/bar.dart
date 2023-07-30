@@ -68,11 +68,12 @@ class Bar extends PieceLocation {
       position.y + size.y / 2 - firstPiece.size.y / 2 + firstPiece.size.y / 2 * firstPiece.owner.direction,
     );
 
+    firstPiece.priority = 1;
     firstPiece.position.setFrom(middlePosition);
 
     if (pieces.length > 1) {
       for (var i = 1; i < pieces.length; i++) {
-        pieces[i].priority = i * pieces[i].owner.direction;
+        pieces[i].priority = pieces[i - 1].priority + i;
         pieces[i].position
           ..setFrom(pieces[i - 1].position)
           ..add(Vector2(0, pieces[i].size.y * (1 / 3) * firstPiece.owner.direction));
