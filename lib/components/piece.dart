@@ -99,6 +99,7 @@ class Piece extends PositionComponent with DragCallbacks {
           break;
         case final WinPile winPile:
           winPile.acquirePiece(this);
+          isMoving = true;
           break;
       }
     }
