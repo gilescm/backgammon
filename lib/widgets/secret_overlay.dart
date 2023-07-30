@@ -56,10 +56,15 @@ class SecretOverlayState extends ConsumerState<SecretOverlay> {
   void _onTapDown(TapDownDetails details) {
     final secretState = ref.read(secretStateProvider);
     if (secretState.canDiscover) {
-      final halfScreenWidth = MediaQuery.sizeOf(context).width / 2;
-      if (details.globalPosition.dx < halfScreenWidth) {
+      final screenSize = MediaQuery.sizeOf(context);
+      final quarterScreenWidth = screenSize.width / 4;
+      final quarterScreenHeight = screenSize.height / 4;
+
+      final tapDownPosition = details.globalPosition;
+      if (tapDownPosition.dx < quarterScreenWidth && tapDownPosition.dy < quarterScreenHeight) {
         _totalLeftTaps++;
-      } else {
+      } else if (tapDownPosition.dx > screenSize.width - quarterScreenWidth &&
+          tapDownPosition.dy > screenSize.height - quarterScreenHeight) {
         _totalRightTaps++;
       }
 
