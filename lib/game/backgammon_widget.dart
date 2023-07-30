@@ -16,7 +16,7 @@ class BackgammonGameNotifier extends StateNotifier<BackgammonGame?> {
 }
 
 class BackgammonWidget extends ConsumerStatefulWidget {
-  const BackgammonWidget.initialiseWithGame({
+  const BackgammonWidget.controlled({
     super.key,
     required this.gameFactory,
   });
