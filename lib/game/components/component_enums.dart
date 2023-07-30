@@ -1,3 +1,7 @@
+enum MovementType { exact, atMost }
+
+enum BarMovementType { capturing, escaping }
+
 enum Player {
   player(-1, PieceColor.silver),
   opponent(1, PieceColor.orange);

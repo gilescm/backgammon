@@ -1,10 +1,6 @@
 import 'package:backgammon/game/components/component_enums.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum MovementType { exact, atMost }
-
-enum BarMovementType { capturing, escaping }
-
 final backgammonStateProvider = StateNotifierProvider<BackgammonStateNotifier, BackgammonGameState>(
   (ref) => BackgammonStateNotifier(),
 );
