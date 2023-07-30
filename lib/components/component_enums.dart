@@ -1,6 +1,6 @@
 enum PieceOwner {
-  player(1),
-  opponent(-1);
+  player(-1),
+  opponent(1);
 
   const PieceOwner(this.barDirection);
 
