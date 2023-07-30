@@ -71,8 +71,8 @@ class Dice extends PositionComponent with TapCallbacks, HasComponentRef {
   }
 
   void _saveValuesToGame() {
-    final gameState = ref.read(backgammonStateProvider.notifier);
-    gameState.updateDieValues(
+    final gameNotifier = ref.read(backgammonStateProvider.notifier);
+    gameNotifier.updateDieValues(
       children.query<_Die>().map((die) => die._value).toList(),
     );
   }

@@ -19,7 +19,7 @@ class Bar extends PieceLocation {
     height: 208,
   );
 
-  bool containsPiecesFor(PieceOwner owner) => _pieces.any((piece) => piece.owner == owner);
+  bool containsPiecesFor(Player owner) => _pieces.any((piece) => piece.owner == owner);
 
   @override
   void acquirePiece(Piece piece) {

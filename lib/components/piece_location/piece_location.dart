@@ -19,7 +19,7 @@ sealed class PieceLocation extends PositionComponent {
 
   void returnPiece(Piece piece);
 
-  int locationOrder(PieceOwner owner) {
+  int locationOrder(Player owner) {
     switch (this) {
       case WinPile _:
         if (owner.isPlayer) {

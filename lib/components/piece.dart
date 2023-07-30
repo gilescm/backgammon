@@ -20,7 +20,7 @@ class Piece extends PositionComponent with DragCallbacks, HasComponentRef {
         _sprite = _sprites[color]!,
         super(size: BackgammonGame.pieceSize);
 
-  final PieceOwner owner;
+  final Player owner;
   final PieceColor color;
   final Sprite _sprite;
 
@@ -45,7 +45,7 @@ class Piece extends PositionComponent with DragCallbacks, HasComponentRef {
 
   @override
   void onDragStart(DragStartEvent event) {
-    final gameState = ref.read(backgammonStateProvider.notifier);
+    final gameState = ref.read(backgammonStateProvider);
     if (!gameState.canMovePiece(owner)) {
       return;
     }
@@ -85,7 +85,8 @@ class Piece extends PositionComponent with DragCallbacks, HasComponentRef {
       return;
     }
 
-    final gameState = ref.read(backgammonStateProvider.notifier);
+    final gameState = ref.read(backgammonStateProvider);
+    final gameNotifier = ref.read(backgammonStateProvider.notifier);
 
     var isMoving = false;
     final nearbyLocation = parent!.componentsAtPoint(position + size / 2).whereType<PieceLocation>().toList();
@@ -101,7 +102,7 @@ class Piece extends PositionComponent with DragCallbacks, HasComponentRef {
           final canMoveDistance = gameState.canMoveDistance(diff);
 
           if (canMoveDistance && point.isValidNextMoveFor(this)) {
-            gameState.updateMovementStats(diff);
+            gameNotifier.updateMovementStats(diff);
 
             if (point.canSendExistingPieceToBar(this)) {
               point.swapOpposingPieces(this);
@@ -122,7 +123,7 @@ class Piece extends PositionComponent with DragCallbacks, HasComponentRef {
                 : currentOrder - winPile.locationOrder(owner);
 
             if (gameState.canMoveDistance(diff, type: MovementType.atMost)) {
-              gameState.updateMovementStats(diff, type: MovementType.atMost);
+              gameNotifier.updateMovementStats(diff, type: MovementType.atMost);
               winPile.acquirePiece(this);
               isMoving = true;
             }
@@ -133,7 +134,7 @@ class Piece extends PositionComponent with DragCallbacks, HasComponentRef {
     }
 
     if (isMoving) {
-      gameState.maybeEndTurn(owner);
+      gameNotifier.maybeEndTurn(owner);
     } else {
       location.returnPiece(this);
     }

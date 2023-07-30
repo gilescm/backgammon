@@ -13,11 +13,24 @@ class BackgammonGameState {
     required this.dieValues,
   }) : assert(dieValues.length == 2);
 
-  PieceOwner currentTurn;
+  Player currentTurn;
   List<int> dieValues;
 
+  int get totalRolled => dieValues.fold<int>(0, (total, die) => total + die);
+
+  bool canMovePiece(Player owner) => totalRolled != 0 && currentTurn == owner;
+
+  bool canMoveDistance(int distance, {MovementType type = MovementType.exact}) {
+    switch (type) {
+      case MovementType.exact:
+        return distance == dieValues.first || distance == dieValues.last || distance == totalRolled;
+      case MovementType.atMost:
+        return distance <= totalRolled;
+    }
+  }
+
   BackgammonGameState copyWith({
-    PieceOwner? player,
+    Player? player,
     List<int>? dieValues,
   }) {
     return BackgammonGameState._(
@@ -28,14 +41,14 @@ class BackgammonGameState {
 }
 
 class BackgammonStateNotifier extends StateNotifier<BackgammonGameState> {
-  BackgammonStateNotifier() : super(BackgammonGameState._(currentTurn: PieceOwner.player, dieValues: [0, 0]));
+  BackgammonStateNotifier() : super(BackgammonGameState._(currentTurn: Player.player, dieValues: [0, 0]));
 
   void updateDieValues(List<int> values) {
     state = state.copyWith(dieValues: values);
   }
 
-  void maybeEndTurn(PieceOwner owner) {
-    if (state.currentTurn == owner && _totalRolled == 0) {
+  void maybeEndTurn(Player owner) {
+    if (state.currentTurn == owner && state.totalRolled == 0) {
       state = state.copyWith(
         player: state.currentTurn.other,
         dieValues: [0, 0],
@@ -43,42 +56,32 @@ class BackgammonStateNotifier extends StateNotifier<BackgammonGameState> {
     }
   }
 
-  bool canMovePiece(PieceOwner owner) => _totalRolled != 0 && state.currentTurn == owner;
-
-  bool canMoveDistance(int distance, {MovementType type = MovementType.exact}) {
-    switch (type) {
-      case MovementType.exact:
-        return distance == state.dieValues.first || distance == state.dieValues.last || distance == _totalRolled;
-      case MovementType.atMost:
-        return distance <= _totalRolled;
-    }
-  }
-
   void updateMovementStats(int distance, {MovementType type = MovementType.exact}) {
-    assert(_totalRolled != 0);
+    assert(state.totalRolled != 0);
 
+    final dieValues = List<int>.from(state.dieValues);
     switch (type) {
       case MovementType.exact:
         if (distance == state.dieValues.first) {
-          state.dieValues[0] = 0;
+          dieValues[0] = 0;
         } else if (distance == state.dieValues.last) {
-          state.dieValues[1] = 0;
-        } else if (distance == _totalRolled) {
-          state.dieValues[0] = 0;
-          state.dieValues[1] = 0;
+          dieValues[1] = 0;
+        } else if (distance == state.totalRolled) {
+          dieValues[0] = 0;
+          dieValues[1] = 0;
         }
       case MovementType.atMost:
-        state.dieValues.sort((a, b) => a - b);
+        dieValues.sort((a, b) => a - b);
         if (distance <= state.dieValues.first) {
-          state.dieValues[0] = 0;
+          dieValues[0] = 0;
         } else if (distance > state.dieValues.first && distance <= state.dieValues.last) {
-          state.dieValues[1] = 0;
-        } else if (distance <= _totalRolled) {
-          state.dieValues[0] = 0;
-          state.dieValues[1] = 0;
+          dieValues[1] = 0;
+        } else if (distance <= state.totalRolled) {
+          dieValues[0] = 0;
+          dieValues[1] = 0;
         }
     }
-  }
 
-  int get _totalRolled => state.dieValues.fold<int>(0, (total, die) => total + die);
+    state = state.copyWith(dieValues: dieValues);
+  }
 }
