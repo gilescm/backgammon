@@ -1,6 +1,7 @@
 import 'package:backgammon/game/backgammon_game.dart';
 import 'package:backgammon/game/backgammon_widget.dart';
 import 'package:backgammon/game_stats/game_stats.dart';
+import 'package:backgammon/widgets/secret_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,21 +20,23 @@ class BackgammonApp extends ConsumerWidget {
     return MaterialApp(
       home: SafeArea(
         top: true,
-        child: Scaffold(
-          backgroundColor: Colors.blue,
-          body: Row(
-            children: [
-              ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: screenWidth * .75),
-                child: const BackgammonWidget.initialiseWithGame(
-                  gameFactory: BackgammonGame.new,
+        child: SecretOverlay(
+          child: Scaffold(
+            backgroundColor: Colors.cyan,
+            body: Row(
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: screenWidth * .75),
+                  child: const BackgammonWidget.initialiseWithGame(
+                    gameFactory: BackgammonGame.new,
+                  ),
                 ),
-              ),
-              ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: screenWidth * .25),
-                child: const GameStats(),
-              ),
-            ],
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: screenWidth * .25),
+                  child: const GameStats(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
