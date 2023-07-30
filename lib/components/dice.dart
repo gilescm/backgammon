@@ -10,7 +10,6 @@ import 'package:flame/flame.dart';
 class Dice extends PositionComponent with TapCallbacks {
   Dice()
       : super(
-          priority: 100,
           position: Vector2(
             BackgammonGame.quadrantSize.x,
             BackgammonGame.quadrantSize.y * 2 - BackgammonGame.buttonSize.y / 2,
@@ -18,8 +17,16 @@ class Dice extends PositionComponent with TapCallbacks {
           size: Vector2(BackgammonGame.buttonSize.x * 2, BackgammonGame.buttonSize.y),
         );
 
+  int get totalValue => children.query<_Die>().fold(0, (total, die) => total + die._value);
+  int get firstValue => children.query<_Die>().first._value;
+  int get secondValue => children.query<_Die>().last._value;
+
+  bool get isDouble => firstValue == secondValue;
+
   @override
   void onLoad() {
+    children.register<_Die>();
+
     final firstDieButton = _Die();
     final secondDieButton = _Die(
       position: firstDieButton.position + Vector2(BackgammonGame.buttonSize.x, 0),
@@ -31,17 +38,15 @@ class Dice extends PositionComponent with TapCallbacks {
 
   @override
   void render(Canvas canvas) {
-    for (final child in children) {
+    for (final child in children.query<_Die>()) {
       child.render(canvas);
     }
   }
 
   @override
   void onTapDown(TapDownEvent event) {
-    for (final child in children) {
-      if (child is _Die) {
-        child.onTapDown(event);
-      }
+    for (final child in children.query<_Die>()) {
+      child.onTapDown(event);
     }
 
     super.onTapDown(event);
@@ -49,44 +54,57 @@ class Dice extends PositionComponent with TapCallbacks {
 
   @override
   void onTapUp(TapUpEvent event) {
-    for (final child in children) {
-      if (child is _Die) {
-        child.onTapUp(event);
-      }
+    for (final child in children.query<_Die>()) {
+      child.onTapUp(event);
     }
 
     super.onTapUp(event);
   }
+
+  @override
+  void onTapCancel(TapCancelEvent event) {
+    for (final child in children.query<_Die>()) {
+      child.onTapCancel(event);
+    }
+
+    super.onTapCancel(event);
+  }
 }
 
-/// Custom version of a "ButtonComponent" for use only in Dice
-/// to help "animate" the two die's at the same time
+/// Custom version of a "ButtonComponent" for use only in the
+/// `TwoDice` component to help "animate" the two die's.
 class _Die extends PositionComponent with HasAncestor<Dice> {
   _Die({super.position}) : super(size: BackgammonGame.buttonSize) {
     _value = math.min(_rand.nextInt(6) + 1, 6);
     _initSprites();
   }
 
+  late SpriteGroupComponent<int> _button;
+  late SpriteAnimationComponent _buttonDown;
+
   late int _value;
-  late SpriteGroupComponent<int> button;
-  late SpriteAnimationComponent buttonDown;
 
   final _rand = math.Random();
 
   void onTapDown(TapDownEvent event) {
-    button.removeFromParent();
-    buttonDown.parent = this;
+    _button.removeFromParent();
+    _buttonDown.parent = this;
   }
 
   void onTapUp(TapUpEvent event) {
-    buttonDown.removeFromParent();
-    button.parent = this;
+    _buttonDown.removeFromParent();
+    _button.parent = this;
     _value = math.min(_rand.nextInt(6) + 1, 6);
-    button.current = _value;
+    _button.current = _value;
+  }
+
+  void onTapCancel(TapCancelEvent event) {
+    _buttonDown.removeFromParent();
+    _button.parent = this;
   }
 
   void _initSprites() {
-    button = SpriteGroupComponent<int>(
+    _button = SpriteGroupComponent<int>(
       position: Vector2.zero(),
       size: BackgammonGame.buttonSize,
       current: _value,
@@ -136,7 +154,7 @@ class _Die extends PositionComponent with HasAncestor<Dice> {
       },
     );
 
-    buttonDown = SpriteAnimationComponent.fromFrameData(
+    _buttonDown = SpriteAnimationComponent.fromFrameData(
       Flame.images.fromCache(SpriteAssetType.die.path),
       SpriteAnimationData.sequenced(
         textureSize: Vector2(32, 16),
@@ -148,6 +166,6 @@ class _Die extends PositionComponent with HasAncestor<Dice> {
       size: Vector2(BackgammonGame.buttonSize.x * 2, BackgammonGame.buttonSize.y),
     );
 
-    add(button);
+    add(_button);
   }
 }
