@@ -1,4 +1,4 @@
-import 'package:backgammon/components/component_enums.dart';
+import 'package:backgammon/game/components/component_enums.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/widgets.dart';

@@ -1,7 +1,7 @@
-import 'package:backgammon/backgammon_game.dart';
-import 'package:backgammon/backgammon_state.dart';
-import 'package:backgammon/components/component_enums.dart';
-import 'package:backgammon/components/piece_location/piece_location.dart';
+import 'package:backgammon/game/backgammon_game.dart';
+import 'package:backgammon/game/backgammon_state.dart';
+import 'package:backgammon/game/components/component_enums.dart';
+import 'package:backgammon/game/components/piece_location/piece_location.dart';
 import 'package:backgammon/utils/position_component_utils.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
 import 'package:flame/components.dart';

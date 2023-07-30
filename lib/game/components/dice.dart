@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
-import 'package:backgammon/backgammon_game.dart';
-import 'package:backgammon/backgammon_state.dart';
+import 'package:backgammon/game/backgammon_game.dart';
+import 'package:backgammon/game/backgammon_state.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';

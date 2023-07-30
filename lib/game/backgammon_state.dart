@@ -1,4 +1,4 @@
-import 'package:backgammon/components/component_enums.dart';
+import 'package:backgammon/game/components/component_enums.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum MovementType { exact, atMost }

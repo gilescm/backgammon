@@ -1,4 +1,4 @@
-import 'package:backgammon/backgammon_state.dart';
+import 'package:backgammon/game/backgammon_state.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
 import 'package:backgammon/utils/string_utils.dart';
 import 'package:backgammon/utils/theme_utils.dart';

@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:backgammon/backgammon_game.dart';
-import 'package:backgammon/components/component_enums.dart';
+import 'package:backgammon/game/backgammon_game.dart';
+import 'package:backgammon/game/components/component_enums.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';

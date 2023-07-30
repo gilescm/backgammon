@@ -1,17 +1,17 @@
-import 'package:backgammon/backgammon_game.dart';
+import 'package:backgammon/game/backgammon_game.dart';
+import 'package:backgammon/game/backgammon_widget.dart';
 import 'package:backgammon/game_stats/game_stats.dart';
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
   runApp(
-    const ProviderScope(child: MyApp()),
+    const ProviderScope(child: BackgammonApp()),
   );
 }
 
-class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
+class BackgammonApp extends ConsumerWidget {
+  const BackgammonApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,8 +25,8 @@ class MyApp extends ConsumerWidget {
             children: [
               ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: screenWidth * .75),
-                child: GameWidget(
-                  game: BackgammonGame(ref),
+                child: const BackgammonWidget.initialiseWithGame(
+                  gameFactory: BackgammonGame.new,
                 ),
               ),
               ConstrainedBox(
