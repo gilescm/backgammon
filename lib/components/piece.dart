@@ -47,15 +47,16 @@ class Piece extends PositionComponent with DragCallbacks {
     }
 
     switch (location) {
-      case final Bar bar:
+      case final Bar _:
         break;
+      case final WinPile _:
+        // You cannot move pieces from the win pile (and you shouldn't want to!)
+        return;
       case final Point point:
-        if (!point.isTopPiece(this) || _worldBar.containsPiecesFor(owner)) {
+        if (_worldBar.containsPiecesFor(owner)) {
           return;
         }
 
-        break;
-      case final WinPile winPile:
         break;
     }
 
@@ -84,7 +85,8 @@ class Piece extends PositionComponent with DragCallbacks {
     if (nearbyLocation.isNotEmpty) {
       final closestLocation = nearbyLocation.first;
       switch (closestLocation) {
-        case final Bar bar:
+        case final Bar _:
+          // Manual placement onto the bar is not allowed
           break;
         case final Point point:
           if (point.canSendExistingPieceToBar(this)) {
@@ -96,6 +98,7 @@ class Piece extends PositionComponent with DragCallbacks {
           }
           break;
         case final WinPile winPile:
+          winPile.acquirePiece(this);
           break;
       }
     }
