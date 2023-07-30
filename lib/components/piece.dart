@@ -45,7 +45,7 @@ class Piece extends PositionComponent with DragCallbacks, HasComponentRef {
 
   @override
   void onDragStart(DragStartEvent event) {
-    final gameState = ref.read(backgammonStateProvider);
+    final gameState = ref.read(backgammonStateProvider.notifier);
     if (!gameState.canMovePiece(owner)) {
       return;
     }
@@ -85,7 +85,7 @@ class Piece extends PositionComponent with DragCallbacks, HasComponentRef {
       return;
     }
 
-    final gameState = ref.read(backgammonStateProvider);
+    final gameState = ref.read(backgammonStateProvider.notifier);
 
     var isMoving = false;
     final nearbyLocation = parent!.componentsAtPoint(position + size / 2).whereType<PieceLocation>().toList();

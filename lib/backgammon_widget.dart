@@ -1,6 +1,6 @@
 import 'package:backgammon/backgammon_game.dart';
 import 'package:flame/game.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final backgammonGameProvider = StateNotifierProvider<BackgammonGameNotifier, BackgammonGame?>(
@@ -46,6 +46,11 @@ class _RiverpodGameWidgetState extends ConsumerState<BackgammonWidget> {
       return Container();
     }
 
-    return GameWidget(game: game!);
+    return GameWidget(
+      game: game!,
+      loadingBuilder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 }
