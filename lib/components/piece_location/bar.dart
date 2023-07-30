@@ -45,7 +45,7 @@ class Bar extends PieceLocation {
   void render(Canvas canvas) {
     _sprite.render(
       canvas,
-      position: Vector2(0, 0),
+      position: Vector2.zero(),
       size: size,
     );
   }

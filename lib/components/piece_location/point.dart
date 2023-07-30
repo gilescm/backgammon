@@ -9,9 +9,6 @@ class Point extends PieceLocation {
   })  : _quadrantType = quadrantType,
         _order = order;
 
-  @override
-  bool get debugMode => true;
-
   final QuadrantType _quadrantType;
   final int _order;
   final List<Piece> _visiblePieces = [];
