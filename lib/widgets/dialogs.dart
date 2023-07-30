@@ -1,5 +1,5 @@
 import 'package:backgammon/utils/theme_utils.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 
 Future<void> showDialogWithSingleDismissAction({
@@ -13,14 +13,14 @@ Future<void> showDialogWithSingleDismissAction({
   await showPlatformDialog<void>(
     context: context,
     builder: (context) => BasicDialogAlert(
-      title: title != null ? Text(title) : null,
+      title: Text(title),
       content: Padding(
-        padding: EdgeInsets.only(top: kSize8),
+        padding: const EdgeInsets.only(top: kSize8),
         child: Text(body),
       ),
       actions: <Widget>[
         BasicDialogAction(
-          title: Text('Ok'),
+          title: const Text('Got it!'),
           onPressed: Navigator.of(context).pop,
         ),
       ],

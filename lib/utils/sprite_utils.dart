@@ -1,7 +1,7 @@
 import 'package:backgammon/game/components/component_enums.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 enum SpriteAssetType {
   board('backgammon_board.png'),

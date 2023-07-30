@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 const kSize8 = 8.0;
 const kSize16 = 16.0;
