@@ -10,8 +10,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 part 'game_stats.rules.dart';
 
-class GameStats extends ConsumerWidget {
-  const GameStats({super.key});
+class GameStatsSideBar extends ConsumerWidget {
+  const GameStatsSideBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,7 +32,8 @@ class GameStats extends ConsumerWidget {
         children: [
           Text('$playerName\'s turn'),
           context.vBox16,
-          Row(
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               _BackgammonSprite(config: pieceSprites[currentPlayer.pieceColor]),
               context.hBox8,
