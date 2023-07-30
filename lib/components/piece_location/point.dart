@@ -7,6 +7,7 @@ class Point extends PieceLocation {
   bool get debugMode => false;
 
   final int order;
+  final List<Piece> _visiblePieces = [];
   final List<Piece> _pieces = [];
 
   bool isTopPiece(Piece piece) => _pieces.isEmpty || _pieces.last == piece;
@@ -17,25 +18,35 @@ class Point extends PieceLocation {
 
   @override
   void acquirePiece(Piece piece) {
-    assert(canAcceptPiece(piece));
-    assert(!canSendExistingPieceToBar(piece), 'This point shouldn\'t acquire a different owners piece right now');
+    assert(canAcceptPiece(piece), 'This point cannot acquire a different owners piece right now');
+    assert(!canSendExistingPieceToBar(piece));
 
     piece.priority = _pieces.length;
     piece.location = this;
 
     _pieces.add(piece);
+    _visiblePieces.add(piece);
     _positionPieces();
   }
 
   @override
   void removePiece(Piece piece) {
     _pieces.remove(piece);
+    _visiblePieces.remove(piece);
     _positionPieces();
   }
 
   @override
   void returnPiece(Piece piece) {
+    assert(!_visiblePieces.contains(piece), 'Can only visually return piece if it is not already there');
+
     piece.priority = _pieces.length;
+    _visiblePieces.add(piece);
+    _positionPieces();
+  }
+
+  void visuallyRemovePiece(Piece piece) {
+    _visiblePieces.remove(piece);
     _positionPieces();
   }
 
@@ -60,22 +71,22 @@ class Point extends PieceLocation {
   }
 
   void _positionPieces() {
-    if (_pieces.isEmpty) {
+    if (_visiblePieces.isEmpty) {
       return;
     }
 
     final isInTopHalf = _currentQuadrantType.isTop;
-    final firstPiece = _pieces[0];
+    final firstPiece = _visiblePieces[0];
     final middlePosition = Vector2(
       position.x + size.x / 2 - firstPiece.size.x / 2,
       isInTopHalf ? position.y : position.y + size.y - firstPiece.size.y,
     );
 
     firstPiece.position.setFrom(middlePosition);
-    for (var i = 1; i < _pieces.length; i++) {
-      _pieces[i].position
-        ..setFrom(_pieces[i - 1].position)
-        ..add(Vector2(0, (isInTopHalf ? 1 : -1) * _pieces[i].size.y));
+    for (var i = 1; i < _visiblePieces.length; i++) {
+      _visiblePieces[i].position
+        ..setFrom(_visiblePieces[i - 1].position)
+        ..add(Vector2(0, (isInTopHalf ? 1 : -1) * _visiblePieces[i].size.y));
     }
   }
 }

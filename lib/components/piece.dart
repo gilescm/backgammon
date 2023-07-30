@@ -57,6 +57,7 @@ class Piece extends PositionComponent with DragCallbacks {
           return;
         }
 
+        point.visuallyRemovePiece(this);
         break;
     }
 
