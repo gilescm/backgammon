@@ -87,12 +87,14 @@ class Piece extends PositionComponent with DragCallbacks {
           // Manual placement onto the bar is not allowed
           break;
         case final Point point:
-          if (point.canSendExistingPieceToBar(this)) {
-            point.swapOpposingPieces(this);
-            isMoving = true;
-          } else if (point.canAcceptPiece(this)) {
-            point.acquirePiece(this);
-            isMoving = true;
+          if (point.isInValidDirectionFor(this)) {
+            if (point.canSendExistingPieceToBar(this)) {
+              point.swapOpposingPieces(this);
+              isMoving = true;
+            } else if (point.canAcceptPiece(this)) {
+              point.acquirePiece(this);
+              isMoving = true;
+            }
           }
           break;
         case final WinPile winPile:

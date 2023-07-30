@@ -54,7 +54,8 @@ class BackgammonGame extends FlameGame {
 
       for (var i = 0; i < pointsPerQuadrant; i++) {
         final point = Point(
-          order: i,
+          quadrantType: quadrant.type,
+          order: quadrant.type.isTop ? pointsPerQuadrant - i - 1 : i,
           position: Vector2(quadrant.position.x + (quadrant.size.x / 6 * i), quadrant.position.y),
           size: Vector2(quadrant.size.x / 6, quadrant.size.y),
         );

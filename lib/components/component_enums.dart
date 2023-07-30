@@ -23,5 +23,20 @@ enum QuadrantType {
 
   bool get isTop => this == topLeft || this == topRight;
 
-  bool get isBottom => this == bottomLeft || this == bottomRight;
+  bool isStartingQuadrantFor(PieceOwner owner) => owner.isPlayer ? this == topRight : this == bottomRight;
+
+  /// The player can only move anticlockwise around the quadrant
+  /// and the opponent can only move clockwise.
+  bool isNextQuadrantFor(PieceOwner owner, QuadrantType currentQuadrant) {
+    switch (this) {
+      case topLeft:
+        return currentQuadrant == (owner.isPlayer ? topRight : bottomLeft);
+      case topRight:
+        return currentQuadrant == (owner.isPlayer ? topRight : topLeft);
+      case bottomLeft:
+        return currentQuadrant == (owner.isPlayer ? topLeft : bottomRight);
+      case bottomRight:
+        return currentQuadrant == (owner.isPlayer ? bottomLeft : bottomRight);
+    }
+  }
 }

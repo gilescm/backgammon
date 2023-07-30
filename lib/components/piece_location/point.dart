@@ -1,16 +1,46 @@
 part of 'piece_location.dart';
 
 class Point extends PieceLocation {
-  Point({required this.order, super.position, super.size});
+  Point({
+    required QuadrantType quadrantType,
+    required int order,
+    super.position,
+    super.size,
+  })  : _quadrantType = quadrantType,
+        _order = order;
 
   @override
-  bool get debugMode => false;
+  bool get debugMode => true;
 
-  final int order;
+  final QuadrantType _quadrantType;
+  final int _order;
   final List<Piece> _visiblePieces = [];
   final List<Piece> _pieces = [];
 
-  bool isTopPiece(Piece piece) => _pieces.isEmpty || _pieces.last == piece;
+  bool isInValidDirectionFor(Piece piece) {
+    final owner = piece.owner;
+    switch (piece.location) {
+      case final WinPile _:
+        throw StateError('Cannot move pieces from win pile onto points');
+      case final Bar _:
+        return _quadrantType.isStartingQuadrantFor(owner);
+      case final Point currentPoint:
+        final isInSameQuadrant = currentPoint._quadrantType == _quadrantType;
+        if (isInSameQuadrant) {
+          final diff = _order - currentPoint._order;
+          return owner.isPlayer ? diff > 0 : diff < 0;
+        }
+
+        if (_quadrantType.isNextQuadrantFor(owner, currentPoint._quadrantType)) {
+          return true;
+        }
+
+        return false;
+    }
+
+    final pieceDirection = piece.owner.direction;
+    return true;
+  }
 
   bool canAcceptPiece(Piece piece) {
     return _pieces.where((p) => p.owner != piece.owner).length < 2 && _pieces.length < BackgammonGame.maxPiecesPerPoint;
