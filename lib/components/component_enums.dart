@@ -2,9 +2,9 @@ enum PieceOwner {
   player(-1),
   opponent(1);
 
-  const PieceOwner(this.barDirection);
+  const PieceOwner(this.direction);
 
-  final int barDirection;
+  final int direction;
 
   bool get isPlayer => this == player;
 }
