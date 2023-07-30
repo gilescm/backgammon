@@ -2,17 +2,19 @@ import 'package:backgammon/components/component_enums.dart';
 import 'package:backgammon/components/piece.dart';
 import 'package:backgammon/components/piece_location/piece_location.dart';
 import 'package:backgammon/components/quadrant.dart';
+import 'package:backgammon/components/roll_button.dart';
 import 'package:backgammon/utils/sprite_utils.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 
 class BackgammonGame extends FlameGame {
-  static const double _gameUnit = 800.0;
+  static const double _gameUnit = 20.0;
 
   static const double _pointWidth = _gameUnit * 6;
   static const double _pointHeight = _pointWidth * 4;
 
+  static final Vector2 buttonSize = Vector2(barSize.x / 2, barSize.x / 2);
   static final Vector2 pieceSize = Vector2(_pointWidth * (2 / 3), _pointWidth * (2 / 3));
   static final Vector2 pointSize = Vector2(_pointWidth, _pointHeight);
   static final Vector2 barSize = Vector2(pieceSize.x * 1.25, pointSize.y * 2);
@@ -47,7 +49,8 @@ class BackgammonGame extends FlameGame {
       )
     ];
 
-    await world.addAll(quadrants);
+    // ignore: unawaited_futures
+    world.addAll(quadrants);
 
     for (final quadrant in quadrants) {
       final points = <Point>[];
@@ -78,6 +81,7 @@ class BackgammonGame extends FlameGame {
       }
     }
 
+    world.add(Dice());
     add(world);
 
     final camera = CameraComponent(world: world)
