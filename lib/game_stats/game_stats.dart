@@ -52,6 +52,13 @@ class GameStatsSideBar extends ConsumerWidget {
               isPlayer: currentPlayer.isPlayer,
               isPieceInBar: gameState.doesCurrentPlayerHavePieceInBar,
             ),
+            ElevatedButton(
+              onPressed: () {
+                final gameNotifier = ref.read(backgammonStateProvider.notifier);
+                gameNotifier.endTurn();
+              },
+              child: const Text('End turn'),
+            )
           ],
         ],
       ),

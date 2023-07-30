@@ -36,7 +36,8 @@ class _GeneralRules extends StatelessWidget {
                 context: context,
                 title: 'Movement',
                 body: 'You can move up to two pieces the value of one die each, or you can move'
-                    ' one piece the total value of both dice.',
+                    ' one piece the total value of both dice. If you can\'t go then end your turn'
+                    ' by tapping the button in the bottom right',
               );
             },
           ),
