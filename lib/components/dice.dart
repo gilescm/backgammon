@@ -7,7 +7,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 
-class Dice extends PositionComponent with TapCallbacks {
+class Dice extends PositionComponent with TapCallbacks, HasGameRef<BackgammonGame> {
   Dice()
       : super(
           position: Vector2(
@@ -17,11 +17,10 @@ class Dice extends PositionComponent with TapCallbacks {
           size: Vector2(BackgammonGame.buttonSize.x * 2, BackgammonGame.buttonSize.y),
         );
 
-  int get totalValue => children.query<_Die>().fold(0, (total, die) => total + die._value);
-  int get firstValue => children.query<_Die>().first._value;
-  int get secondValue => children.query<_Die>().last._value;
-
-  bool get isDouble => firstValue == secondValue;
+  void _saveValuesToGame() {
+    game.dieValues.clear();
+    game.dieValues.addAll(children.query<_Die>().map((die) => die._value));
+  }
 
   @override
   void onLoad() {
@@ -58,6 +57,8 @@ class Dice extends PositionComponent with TapCallbacks {
       child.onTapUp(event);
     }
 
+    _saveValuesToGame();
+
     super.onTapUp(event);
   }
 
@@ -67,6 +68,8 @@ class Dice extends PositionComponent with TapCallbacks {
       child.onTapCancel(event);
     }
 
+    _saveValuesToGame();
+
     super.onTapCancel(event);
   }
 }
@@ -75,14 +78,13 @@ class Dice extends PositionComponent with TapCallbacks {
 /// `TwoDice` component to help "animate" the two die's.
 class _Die extends PositionComponent with HasAncestor<Dice> {
   _Die({super.position}) : super(size: BackgammonGame.buttonSize) {
-    _value = math.min(_rand.nextInt(6) + 1, 6);
     _initSprites();
   }
 
   late SpriteGroupComponent<int> _button;
   late SpriteAnimationComponent _buttonDown;
 
-  late int _value;
+  int _value = 0;
 
   final _rand = math.Random();
 
@@ -107,7 +109,7 @@ class _Die extends PositionComponent with HasAncestor<Dice> {
     _button = SpriteGroupComponent<int>(
       position: Vector2.zero(),
       size: BackgammonGame.buttonSize,
-      current: _value,
+      current: _value == 0 ? math.min(_rand.nextInt(6) + 1, 6) : _value,
       sprites: {
         1: backgammonSprite(
           SpriteAssetType.die,

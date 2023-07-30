@@ -7,7 +7,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
 
-class Piece extends PositionComponent with DragCallbacks {
+class Piece extends PositionComponent with DragCallbacks, HasGameRef<BackgammonGame> {
   Piece({
     required this.owner,
     required this.color,
@@ -43,6 +43,10 @@ class Piece extends PositionComponent with DragCallbacks {
 
   @override
   void onDragStart(DragStartEvent event) {
+    if (!game.hasRolled || game.currentTurn != owner) {
+      return;
+    }
+
     switch (_location) {
       case final Bar _:
         break;
@@ -106,6 +110,8 @@ class Piece extends PositionComponent with DragCallbacks {
 
     if (!isMoving) {
       location.returnPiece(this);
+    } else {
+      game.currentTurn = owner.other;
     }
 
     super.onDragEnd(event);

@@ -1,3 +1,4 @@
+import 'package:backgammon/backgammon_stats.dart';
 import 'package:backgammon/components/component_enums.dart';
 import 'package:backgammon/components/dice.dart';
 import 'package:backgammon/components/piece.dart';
@@ -8,7 +9,7 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 
-class BackgammonGame extends FlameGame {
+class BackgammonGame extends FlameGame with BackgammonGameStats {
   static const double _gameUnit = 20.0;
 
   static const double _pointWidth = _gameUnit * 6;

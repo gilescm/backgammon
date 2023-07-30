@@ -7,6 +7,8 @@ enum PieceOwner {
   final int direction;
 
   bool get isPlayer => this == player;
+
+  PieceOwner get other => isPlayer ? opponent : player;
 }
 
 enum PieceColor { silver, white, red, green, yellow, emerald, purple, blue, orange }
