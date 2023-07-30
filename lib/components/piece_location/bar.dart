@@ -65,7 +65,7 @@ class Bar extends PieceLocation {
     final firstPiece = pieces[0];
     final middlePosition = Vector2(
       position.x + size.x / 2 - firstPiece.size.x / 2,
-      position.y + size.y / 2 - firstPiece.size.y + firstPiece.size.y * firstPiece.owner.direction,
+      position.y + size.y / 2 - firstPiece.size.y + firstPiece.size.y * firstPiece.owner.direction * 2,
     );
 
     firstPiece.priority = 1;
