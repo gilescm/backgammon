@@ -15,16 +15,16 @@ I chose to recreate Backgammon in Flame as its a game I don't know how to play, 
 
 I also used a [Classic Board Games](https://alb-pixel-store.itch.io/classic-board-games-assets) asset pack for the sprites.
 
-As a disclaimer please note, this is the first time I've used Flame and so the majority of the time was spent learning it. I feel like I've made pretty good progress and done some justice to the brief but also like I've only scratched the surface of Flame's feature set and missed a lot out that I would have like to include. Please see below for more info on areas I would have liked to build out further.
+As a disclaimer please note, this is the first time I've used Flame and so the majority of the time was spent learning it. I feel like I've made pretty good progress and done some justice to the brief but also like I've only scratched the surface of Flame's feature set and missed a lot out that I would have liked to include. Please see below for more detail on the project as a whole and on areas I think are lacking and would have liked to build out further.
 
 
 ## How to Play
 
-The game starts with the pieces laid out as they should be for Backgammon with a "player" and "opponent" where the player is moving first. To move tap, hold and release the dice in the middle of the screen. Once done you should see a pair of dice appear in the side section to the right, these are your available moves. You can move one piece along the board to the total number on both die, or you can move two pieces on the board using one die each.
+The game starts with the pieces laid out as they should be for Backgammon with a "player" and "opponent". The player is set to move first. The aim of the game is to get all your pieces into the win pile (the blue section to the right). The player must move anti-clockwise around the board, from point to point, and the opponent must move clockwise. You cannot move onto a point that has two or more opposing pieces. 
 
-The aim of the game is to get all your pieces into the win pile (the blue section to the right). The player must move anti-clockwise around the board, and the opponent must move clockwise. You cannot move onto a point that has two or more opposing pieces. 
+To move hold and release the dice in the middle of the screen. Once done you should see a pair of dice appear in the side section to the right, these are your available moves. You can move one piece along the board to the total number on both die, or you can move two pieces on the board using one die each.
 
-If you move onto a point that has only one opposing piece then that is sent to the bar (the middle section of the board). If either player has piece(s) in the bar then they must move those out first, by rolling and using die to move then into their starting area. The starting area for the player is the top right quadrant and for the opponent its the bottom left.
+If you move onto a point that has only one opposing piece then that is sent to the bar (the middle section of the board). If either player has piece(s) in the bar then they must get those back on the board first, by rolling and using a die to move then into their starting area. The starting area for the player is the top right quadrant and for the opponent its the bottom left.
 
 ## Secret Method
 
@@ -40,17 +40,20 @@ If you move onto a point that has only one opposing piece then that is sent to t
 
 I wasn't entirely sure what was meant by "a webview which deeplinks to a URL" but I have taken it to mean:
 
-- Open a webview in app to a specific website
-- On that website there should be a link to a product that has a mobile app the user has on their phone (e.g. youtube, whatsapp, etc)
+- Open a webview in app to a specific website (I chose google.com)
+- On that website there should be a link to a product that has a mobile app the user has on their phone (e.g. YouTube, whatsapp, etc)
 - Tapping that link shouldn't open it inside the webview, but should instead take the user to the app version of the product they have installed on their device
 
-The webview has been set to open google.com and the app I chose to deeplink to was youtube, sorry about the video choice it was all I could think of. A youtube link can be found on google.com by tapping the "more apps" icon in the top right. The icon itself is a 9x9 grid of boxes. On iOS this opens up a context menu with a youtube app link. On Android I found this opens a long marketing page, however the youtube link can be found towards the bottom.
+Yhe app I chose to deeplink to was YouTube, sorry about the video choice it was all I could think of. A link to YouTuve can be found on google.com by tapping the "more apps" icon in the top right. (The icon is a 9x9 grid of boxes.) 
+
+- On iOS this opens up a context menu with a youtube app link.
+- On Android - Google Pixel 5 - I found this opens a long marketing page, however the youtube link can be found towards the bottom.
 
 ## Architecture and State Management
 
-Since this project is only a test I took a relaxed approach to architecture, moving things around when it felt necessary. I have ended up grouping all the game code into one directory and would consider moving it into a separate package for a longer project to nicely separate it from the widget code.
+Since this project is only a test I took a relaxed approach to architecture, moving things around when it felt necessary and focussing instead on the build. I have ended up grouping all the game code into one directory and the other code in logical groups. I would consider moving things into separate packages for a longer project (e.g. game and mobile).
 
-I used `flutter_riverpod` with `flame_riverpod` to control the "main game state" (who's turn it is and what are the die values) in the game code and too expose it to the main app. The non "main game state" i.e. values and events that the main app doesn't care about - like what piece is positioned at which point and which piece can move where (see `Piece.onDragEnd`) - are just handled mostly inline in the game code to speed developement. Given more time I would probably continue with `flame_riverpod` and abstract the logic into one or many state providers.
+I used `flutter_riverpod` with `flame_riverpod` to control the "main game state" (who's turn it is and what the current die values are) in the game code and to expose it to the main app. The non "main game state" - values and events the main app doesn't care about like what piece is positioned at which point and which piece can move where (see `Piece.onDragEnd`) - are handled mostly inline directly in the game code to speed developement. Given more time I would probably continue with `flame_riverpod` and abstract the logic into one or many state providers.
 
 I also used the `url_launcher` class directly inside `WebviewScreen`. Under normal circumstances I would create a wrapper service class in case the plugin needed to change.
 
@@ -60,7 +63,7 @@ Since this is just a mini project I didn't do any scaffolding around multi langu
 
 ## Testing
 
-This is definitely where the project is lacking the most, I didn't use a TDD approach because I wanted to get learn Flame fast and in order to test Flame code I would have had to learn its testing suite, which would have taken too long.
+This is definitely where the project is lacking the most, I didn't use a TDD approach or add tests after each step because I wanted to learn Flame fast and produce a complete as can be game. In order to test Flame code I would have had to learn its testing suite, which would have taken too long.
 
 ## Extra game functionality 
 
