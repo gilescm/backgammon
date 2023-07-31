@@ -65,6 +65,10 @@ Since this is just a mini project I didn't do any scaffolding around multi langu
 
 This is definitely where the project is lacking the most, I didn't use a TDD approach or add tests after each step because I wanted to learn Flame fast and produce a complete as can be game. In order to test Flame code I would have had to learn its testing suite, which would have taken too long.
 
+## Platform Support
+
+I removed any boilerplate/config for MacOS, Windows, Linux and Web because I haven't tested the webview functionality. The main backgammon game would run on all 4 though so they can easily be added back in, in order to showcase the test.
+
 ## Extra game functionality 
 
 I'd like to add a lot of extra game functionality, and also fix a bugs that I spotted doing a final sweep:
