@@ -4,9 +4,25 @@ import 'package:backgammon/game_hud/game_stats.dart';
 import 'package:backgammon/game_hud/game_stats_quick_reference.dart';
 import 'package:backgammon/widgets/secret_overlay.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-class BackgammonApp extends StatelessWidget {
+class BackgammonApp extends StatefulWidget {
   const BackgammonApp({super.key});
+
+  @override
+  State<BackgammonApp> createState() => _BackgammonAppState();
+}
+
+class _BackgammonAppState extends State<BackgammonApp> {
+  @override
+  void initState() {
+    super.initState();
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+  }
 
   @override
   Widget build(BuildContext context) {
