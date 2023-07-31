@@ -4,85 +4,42 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-final secretStateProvider = StateProvider<SecretState>((ref) {
-  final gameState = ref.watch(backgammonStateProvider);
-  final dieValues = List<int>.from(gameState.dieValues)..sort((a, b) => a - b);
+part 'secret_overlay.state.dart';
 
-  if (dieValues.any((value) => value > 0)) {
-    return SecretState(tapsOnLeft: dieValues[0], tapsOnRight: dieValues[1]);
-  }
-
-  return SecretState(tapsOnLeft: 0, tapsOnRight: 0);
-});
-
-class SecretState {
-  SecretState({
-    required this.tapsOnLeft,
-    required this.tapsOnRight,
-  });
-
-  final int tapsOnLeft;
-  final int tapsOnRight;
-
-  bool get canDiscover => tapsOnLeft != 0 && tapsOnRight != 0;
-
-  bool hasDiscoveredSecret(int leftTaps, int rightTaps) {
-    return canDiscover && tapsOnLeft == leftTaps && tapsOnRight == rightTaps;
-  }
-}
-
-class SecretOverlay extends ConsumerStatefulWidget {
+class SecretOverlay extends ConsumerWidget {
   const SecretOverlay({required this.child, super.key});
 
   final Widget child;
 
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => SecretOverlayState();
-}
-
-class SecretOverlayState extends ConsumerState<SecretOverlay> {
-  int _totalLeftTaps = 0;
-  int _totalRightTaps = 0;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  void _resetTaps() {
-    _totalLeftTaps = 0;
-    _totalRightTaps = 0;
-  }
-
-  void _onTapDown(TapDownDetails details) {
-    final secretState = ref.read(secretStateProvider);
-    if (secretState.canDiscover) {
+  void _onTapDown(BuildContext context, WidgetRef ref, TapDownDetails details) {
+    final secretNotifier = ref.read(secretStateProvider.notifier);
+    if (secretNotifier.canDiscover) {
       final screenSize = MediaQuery.sizeOf(context);
       final quarterScreenWidth = screenSize.width / 4;
       final quarterScreenHeight = screenSize.height / 4;
 
       final tapDownPosition = details.globalPosition;
       if (tapDownPosition.dx < quarterScreenWidth && tapDownPosition.dy < quarterScreenHeight) {
-        _totalLeftTaps++;
+        secretNotifier.updateLeftTaps();
       } else if (tapDownPosition.dx > screenSize.width - quarterScreenWidth &&
           tapDownPosition.dy > screenSize.height - quarterScreenHeight) {
-        _totalRightTaps++;
+        secretNotifier.updateRightTaps();
       }
 
-      if (secretState.hasDiscoveredSecret(_totalLeftTaps, _totalRightTaps)) {
+      if (secretNotifier.hasDiscoveredSecret()) {
         context.go(RouteNames.webview.goName);
-        _resetTaps();
+        secretNotifier.maybeResetTaps();
       }
     } else {
-      _resetTaps();
+      secretNotifier.maybeResetTaps();
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTapDown: _onTapDown,
-      child: widget.child,
+      onTapDown: (details) => _onTapDown(context, ref, details),
+      child: child,
     );
   }
 }
