@@ -17,12 +17,6 @@ class SecretState {
 
   final int tapsOnLeft;
   final int tapsOnRight;
-
-  bool get canDiscover => tapsOnLeft != 0 && tapsOnRight != 0;
-
-  bool hasDiscoveredSecret(int leftTaps, int rightTaps) {
-    return canDiscover && tapsOnLeft == leftTaps && tapsOnRight == rightTaps;
-  }
 }
 
 class SecretStateNotifier extends StateNotifier<SecretState> {
