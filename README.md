@@ -8,14 +8,14 @@ Write a simple game of your choice, using Flutter and Flame, with a hidden metho
 
 ## Introduction
 
-I chose to recreate Backgammon in Flame as its a game I don't know how to play, so - in theory - by the end of the test I'll have more skill both in Flame and the board game. Two good resources I referenced throughout the build process for the game logic were:
+I chose to recreate Backgammon in Flame, as it involves various game states. Resources used for game rules:
 
 - [WikiHow youtube channel - How to Play Backgammon](https://alb-pixel-store.itch.io/classic-board-games-assets)
 - [Backgammon Galore! website - How to Play](https://www.bkgm.com/rules.html)
 
 I also used a [Classic Board Games](https://alb-pixel-store.itch.io/classic-board-games-assets) asset pack for the sprites.
 
-As a disclaimer please note, this is the first time I've used Flame and so the majority of the time was spent learning it. I feel like I've made pretty good progress and done some justice to the brief but also like I've only scratched the surface of Flame's feature set and missed a lot out that I would have liked to include. Please see below for more detail on the project as a whole and on areas I think are lacking and would have liked to build out further.
+Disclaimer: please note, this is the first time I've used Flame and so the majority of the time was spent learning it. I feel like I've made pretty good progress and done some justice to the brief but also like I've only scratched the surface of Flame's feature set and best practise. Theres more I'd like to include and some state management improvements I'd like to make given more time.
 
 
 ## How to Play
@@ -23,6 +23,8 @@ As a disclaimer please note, this is the first time I've used Flame and so the m
 The game starts with the pieces laid out as they should be for Backgammon with a "player" and "opponent". The player is set to move first. The aim of the game is to get all your pieces into the win pile (the blue section to the right). The player must move anti-clockwise around the board, from point to point, and the opponent must move clockwise. You cannot move onto a point that has two or more opposing pieces. 
 
 To move hold and release the dice in the middle of the screen. Once done you should see a pair of dice appear in the side section to the right, these are your available moves. You can move one piece along the board to the total number on both die, or you can move two pieces on the board using one die each.
+
+Once you've used both die then its the other players turn. If don't have any available moves then press the "End turn" button.
 
 If you move onto a point that has only one opposing piece then that is sent to the bar (the middle section of the board). If either player has piece(s) in the bar then they must get those back on the board first, by rolling and using a die to move then into their starting area. The starting area for the player is the top right quadrant and for the opponent its the bottom left.
 
