@@ -26,6 +26,8 @@ To move hold and release the dice in the middle of the screen. Once done you sho
 
 If you move onto a point that has only one opposing piece then that is sent to the bar (the middle section of the board). If either player has piece(s) in the bar then they must get those back on the board first, by rolling and using a die to move then into their starting area. The starting area for the player is the top right quadrant and for the opponent its the bottom left.
 
+**All the rules can be found in app by opening the side menu via the burger icon on the right hand side.**
+
 ## Secret Method
 
 <details>
